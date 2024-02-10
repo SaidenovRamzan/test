@@ -1,0 +1,24 @@
+[
+{
+  "model": "books.rating",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "composition_id": 21,
+    "rating": 5,
+    "created_at": "2023-12-24T09:16:39.629Z",
+    "updated_at": "2023-12-24T09:16:45.416Z"
+  }
+},
+{
+  "model": "books.rating",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "composition_id": 1,
+    "rating": 5,
+    "created_at": "2023-12-24T09:44:11.956Z",
+    "updated_at": "2023-12-24T09:44:15.501Z"
+  }
+}
+]

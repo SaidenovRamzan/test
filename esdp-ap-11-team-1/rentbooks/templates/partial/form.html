@@ -1,0 +1,30 @@
+{% for error in form.non_field_errors %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endfor %}
+
+{% for field in form.visible_fields %}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+    
+    {% endif %}
+    <div class="form-group">
+        <label for="exampleInputEmail1">
+            <span>
+            {{ field.label }}
+        </span>
+        </label>
+            
+        {{ field }}
+    </div>
+    
+{% endfor %}
+
+{% for field in form.hidden_fields %}
+    {{ field }}
+{% endfor %}
+
+{% if button_text %}
+    <button type="submit">{{ button_text }}</button>
+{% endif %}

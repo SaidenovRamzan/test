@@ -1,0 +1,122 @@
+2023-11-27 10:58:25,973 - INFO - Request path: /, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:25,973 - INFO - Пользователь ramzan зашел на главную страницу
+2023-11-27 10:58:26,216 - INFO - Request path: /, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:26,217 - INFO - Пользователь ramzan зашел на главную страницу
+2023-11-27 10:58:28,069 - INFO - Request path: /auth/accounts/profile/, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:28,070 - INFO - Пользователь ramzan вошел в личный кабинет
+2023-11-27 10:58:28,124 - INFO - Request path: /media/avatars/blank.png, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:28,125 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-27 10:58:29,976 - INFO - Request path: /list_compositions/, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:30,917 - INFO - Request path: /auth/accounts/profile/, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:30,918 - INFO - Пользователь ramzan вошел в личный кабинет
+2023-11-27 10:58:30,997 - INFO - Request path: /media/avatars/blank.png, method: GET, user: ramzan, id: 1
+2023-11-27 10:58:30,998 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-27 12:04:26,939 - INFO - Request path: /list_compositions/, method: GET, user: ramzan, id: 1
+2023-11-27 12:04:29,164 - INFO - Request path: /auth/accounts/profile/, method: GET, user: ramzan, id: 1
+2023-11-27 12:04:29,164 - INFO - Пользователь ramzan вошел в личный кабинет
+2023-11-27 12:04:29,249 - INFO - Request path: /media/avatars/blank.png, method: GET, user: ramzan, id: 1
+2023-11-27 12:04:29,250 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-27 12:04:30,541 - INFO - Request path: /list_compositions/, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:23,737 - INFO - Request path: /, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:23,737 - INFO - Пользователь ramzan зашел на главную страницу
+2023-11-28 09:25:23,854 - INFO - Request path: /, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:23,854 - INFO - Пользователь ramzan зашел на главную страницу
+2023-11-28 09:25:24,185 - INFO - Request path: /favicon.ico, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:26,734 - INFO - Request path: /auth/accounts/profile/, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:26,734 - INFO - Пользователь ramzan вошел в личный кабинет
+2023-11-28 09:25:26,779 - INFO - Request path: /media/avatars/blank.png, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:26,780 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-28 09:25:29,276 - INFO - Request path: /logout/, method: GET, user: ramzan, id: 1
+2023-11-28 09:25:29,276 - INFO - Пользователь ramzan вышел из системы
+2023-11-28 09:25:29,293 - INFO - Request path: /login/, method: GET, user: AnonymousUser, id: None
+2023-11-28 09:25:29,294 - INFO - Пользователь AnonymousUser открыл форму входа в систему
+2023-11-28 09:25:30,590 - INFO - Request path: /auth/accounts/register/, method: GET, user: AnonymousUser, id: None
+2023-11-28 09:25:30,590 - INFO - Пользователь AnonymousUser зашел в форму регистрации
+2023-11-28 09:25:43,677 - INFO - Request path: /api/login, method: POST, user: AnonymousUser, id: None
+2023-11-28 09:25:43,700 - INFO - Request path: /auth/accounts/register/, method: POST, user: AnonymousUser, id: None
+2023-11-28 09:25:43,700 - INFO - Пользователь AnonymousUser создал свою учетную запись
+2023-11-28 09:25:44,068 - INFO - Request path: /auth/accounts/profile/, method: GET, user: rama, id: 2
+2023-11-28 09:25:44,068 - INFO - Пользователь rama вошел в личный кабинет
+2023-11-28 09:25:44,103 - INFO - Request path: /media/avatars/blank.png, method: GET, user: rama, id: 2
+2023-11-28 09:25:44,104 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-28 09:25:50,923 - INFO - Request path: /chat, method: GET, user: rama, id: 2
+2023-11-28 09:26:03,270 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:26:03,354 - INFO - Request path: /api/all-chat/, method: POST, user: rama, id: 2
+2023-11-28 09:26:03,357 - INFO - Ошибка: "Message() got unexpected keyword arguments: 'user_1_id', 'user_2_id'" in 
+2023-11-28 09:29:17,505 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:29:17,603 - INFO - Request path: /api/all-chat/, method: POST, user: rama, id: 2
+2023-11-28 09:29:17,609 - INFO - Ошибка: "Message() got unexpected keyword arguments: 'user_1_id', 'user_2_id'" in 
+2023-11-28 09:29:18,461 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:29:18,525 - INFO - Request path: /api/all-chat/, method: POST, user: rama, id: 2
+2023-11-28 09:29:18,529 - INFO - Ошибка: "Message() got unexpected keyword arguments: 'user_1_id', 'user_2_id'" in 
+2023-11-28 09:29:52,041 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:29:52,160 - INFO - Request path: /api/all-chat/, method: POST, user: rama, id: 2
+2023-11-28 09:29:52,166 - INFO - Ошибка: "Message() got unexpected keyword arguments: 'user_1_id', 'user_2_id'" in 
+2023-11-28 09:31:34,870 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:31:34,979 - INFO - Request path: /api/all-chat/, method: POST, user: rama, id: 2
+2023-11-28 09:31:34,984 - INFO - Ошибка: "Message() got unexpected keyword arguments: 'user_1_id', 'user_2_id'" in 
+2023-11-28 09:32:22,364 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:32:42,714 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:32:42,715 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:32:42,852 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:32:42,852 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:32:44,959 - INFO - Request path: /auth/accounts/profile/, method: GET, user: rama, id: 2
+2023-11-28 09:32:44,959 - INFO - Пользователь rama вошел в личный кабинет
+2023-11-28 09:32:45,026 - INFO - Request path: /media/avatars/blank.png, method: GET, user: rama, id: 2
+2023-11-28 09:32:45,027 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-28 09:32:50,503 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:34:05,368 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:34:09,296 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:35:12,859 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:38:05,113 - INFO - Request path: /chat/, method: GET, user: rama, id: 2
+2023-11-28 09:38:05,227 - INFO - Request path: /api/all-chat/, method: POST, user: rama, id: 2
+2023-11-28 09:38:05,232 - INFO - Ошибка: "insert or update on table "chat_chat" violates foreign key constraint "chat_chat_user_2_id_459003c7_fk_books_usershelf_id"
+DETAIL:  Key (user_2_id)=(1) is not present in table "books_usershelf".
+" in 
+2023-11-28 09:38:09,107 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:38:09,107 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:38:09,194 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:38:09,194 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:38:17,166 - INFO - Request path: /auth/accounts/profile/, method: GET, user: rama, id: 2
+2023-11-28 09:38:17,166 - INFO - Пользователь rama вошел в личный кабинет
+2023-11-28 09:38:17,204 - INFO - Request path: /media/avatars/blank.png, method: GET, user: rama, id: 2
+2023-11-28 09:38:17,205 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-28 09:38:24,677 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:26,280 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:30,762 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:38:30,762 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:38:30,807 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:38:30,807 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:38:32,950 - INFO - Request path: /api/books/1/, method: GET, user: AnonymousUser, id: None
+2023-11-28 09:38:37,597 - INFO - Request path: /list_compositions/, method: GET, user: rama, id: 2
+2023-11-28 09:38:38,620 - INFO - Request path: /auth/accounts/profile/, method: GET, user: rama, id: 2
+2023-11-28 09:38:38,621 - INFO - Пользователь rama вошел в личный кабинет
+2023-11-28 09:38:38,685 - INFO - Request path: /media/avatars/blank.png, method: GET, user: rama, id: 2
+2023-11-28 09:38:38,687 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-28 09:38:39,566 - INFO - Request path: /list_compositions/, method: GET, user: rama, id: 2
+2023-11-28 09:38:41,083 - INFO - Request path: /auth/accounts/profile/, method: GET, user: rama, id: 2
+2023-11-28 09:38:41,084 - INFO - Пользователь rama вошел в личный кабинет
+2023-11-28 09:38:41,116 - INFO - Request path: /media/avatars/blank.png, method: GET, user: rama, id: 2
+2023-11-28 09:38:41,117 - INFO - Ошибка: "“/home/ramzan/esdp-ap-11-team-1/rentbooks/media/avatars/blank.png” does not exist" in 
+2023-11-28 09:38:54,919 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:56,001 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:56,943 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:58,073 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:58,274 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:38:58,430 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:39:11,892 - INFO - Request path: /api/books/search/, method: OPTIONS, user: AnonymousUser, id: None
+2023-11-28 09:39:17,978 - INFO - Request path: /book_create/, method: GET, user: rama, id: 2
+2023-11-28 09:39:40,935 - INFO - Request path: /book_create/, method: POST, user: rama, id: 2
+2023-11-28 09:39:40,935 - INFO - Пользователь rama создал новую книгу 
+2023-11-28 09:39:41,300 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:39:41,300 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:39:41,401 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:39:41,401 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:42:37,550 - INFO - Request path: /list_compositions/, method: GET, user: rama, id: 2
+2023-11-28 09:42:44,336 - INFO - Request path: /api/usershelf, method: GET, user: rama, id: 2
+2023-11-28 09:43:39,634 - INFO - Request path: /api/usershelf, method: POST, user: rama, id: 2
+2023-11-28 09:43:39,641 - -- Ошибка: "Cannot resolve keyword 'book' into field. Choices are: book_state, chat_2, count, history_of_rent, id, id_book, messege_recipient, price_for_sale, price_for_week, purpose, status, user, user_id, user_images" in 
+2023-11-28 09:45:06,593 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:45:06,593 - INFO - Пользователь rama зашел на главную страницу
+2023-11-28 09:45:06,676 - INFO - Request path: /, method: GET, user: rama, id: 2
+2023-11-28 09:45:06,677 - INFO - Пользователь rama зашел на главную страницу

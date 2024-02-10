@@ -1,0 +1,22 @@
+.map-legend-bar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: #f8f9fa; /* Цвет фона полоски */
+    margin-bottom: 10px; /* Отступ от полоски до карты */
+}
+
+.legend-item {
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+    font-size: 14px; /* Размер шрифта текста в легенде */
+}
+
+.color-box {
+    width: 21px;
+    height: 21px;
+    display: block;
+    margin-right: 5px; /* Отступ от кружочка до текста */
+    border-radius: 50%; /* Делает квадраты круглыми */
+}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    {% block link %}
+        <link href="{% static 'css/user_profile.css' %}" rel="stylesheet">
+    {% endblock %}
+
+<div class="container mt-4">
+    {% if account %}
+        <h2 class="mb-5">Страница пользователя: {{ account.username }}</h2>
+            <div class="col-md-4">
+                <img src="{{ account.avatar.url }}" width="300" height="400" class="avatar" alt="{{ account.username }}">
+                </br>
+                <span>Общая оценка:</span>
+                {{ aver_ratio }}
+
+                </br>
+                </br>
+                <span>Оцените пользователя:</span>
+                {% for i in '12345'|make_list %}
+                    <span>
+                        <a href="{% url 'user_ratio' pk=account.id rt=forloop.counter %}">
+
+                            {% if ratings >= i %}
+
+                            <img src="/static/images/favor.ico" height="auto" width="20">
+
+                            {% else %}
+
+                            <img src="/static/images/nofavor.png" height="auto" width="20">
+                            {% endif %}
+                        </a>
+                    </span>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    </br>
+    </br>
+
+    <h2>Объявления пользователя:</h2>
+
+            <div class="row">
+        {% for user_shelf_object in user_shelf_objects %}
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="row g-0 h-100">
+                    <div class="col-md-5 d-flex align-items-stretch">
+                        <img src="data:image/;base64,{{ user_shelf_object.coverphoto }}" class="card-img h-100"
+                            alt="{{ user_shelf_object.book.id_composition.name }}">
+                    </div>
+                    <div class="col-md-7 d-flex flex-column">
+                        <div class="card-body">
+                            <h5 class="card-title">Объявление № {{ user_shelf_object.user_shelf.pk }}</h5>
+                            <p class="card-text"><strong>Книга:</strong>
+                                "{{ user_shelf_object.book.id_composition.name }}"</p>
+                            <p class="card-text">
+                                <strong>Автор:</strong> {{ user_shelf_object.book.id_composition.author }}
+                            </p>
+                            <p class="card-text">
+                                <strong>Описание:</strong> {{ user_shelf_object.book.id_composition.description|slice:"50" }}...
+                            </p>
+                            <p class="card-text"><strong>ISBN:</strong> {{ user_shelf_object.book.isbn }}
+                            </p>
+                        </div>
+                        <div class="card-footer mt-auto bg-white">
+                            <a class="btn btn-primary" href="{% url 'user_shelf_detail' user_shelf_object.user_shelf.id %}">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">Объявлений нет</p>
+        {% endfor %}
+    </div>
+
+    <div id="comments_block">
+        {% if user.is_authenticated %}
+            <b>
+                <p>Добавить комментарий:</p>
+            </b>
+            <input id="composition_id" hidden name="composition_id" value="{{ book.pk }}">
+            <input id="user_id" hidden name="user_id" value="{{ request.user_id }}">
+            <textarea type="text" id="text" class="form-control mb-3" name="text"></textarea>
+            <button id="submit_comment" class="btn btn-outline-primary btn-sm" type="submit">Опубликовать</button>
+        {% endif %}
+
+        <div class="comments_list">
+            <b>
+                Комментарии:
+            </b>
+            {% if comments %}
+                <div class="comments_title">
+                </div>
+                </div>
+            {% else %}
+                <p>Пока нет комментариев</p>
+            {% endif %}
+    </div>
+    </div>
+
+{% endblock %}

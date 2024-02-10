@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <br/>
+        
+        <h2>Добавление композиции</h2>
+        <br/>
+            <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ forms.as_p }}
+                    <input type="submit" class="btn btn-primary" value="Добавить композицию">
+            </form>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+    </div>
+{% endblock %}

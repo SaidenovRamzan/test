@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block link %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=58e3f0b7-4b3f-4375-afee-1c084e4ef7ea&lang=ru_RU"
+            type="text/javascript"></script>
+    <link rel="stylesheet" href="{% static 'css/map_legend.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Фильтры слева -->
+            <div class="col-md-3 p-3 border-end">
+                <h3 class=" mb-4">Фильтры</h3>
+                <form method="get" action="{% url 'list_compositions' %}">
+                    <!-- Фильтр по жанрам -->
+                    <div class="mb-3">
+                        <h5>Выберите жанр</h5>
+                        <select name="genre" class="form-select" onchange="updateFormsAndSubmit();">
+                            <option value="">Все жанры</option>
+                            {% for genre in genres %}
+                                <option value="{{ genre.name }}" {% if genre == selected_genre %}selected{% endif %}>
+                                    {{ genre.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Фильтр по назначению -->
+                    <div class="mb-3">
+                        <h5>Вид наличия на сайте</h5>
+                        <select name="purpose" class="form-select" onchange="updateFormsAndSubmit();">
+                            <option value="">Любое</option>
+                            <option value="rent" {% if selected_purpose == "rent" %}selected{% endif %}>Аренда
+                            </option>
+                            <option value="sale" {% if selected_purpose == "sale" %}selected{% endif %}>Продажа
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Фильтр по языкам -->
+                    <div class="mb-3">
+                        <h5>Выберите язык</h5>
+                        <select name="language" class="form-select" onchange="updateFormsAndSubmit();">
+                            <option value="">Все языки</option>
+                            {% for language in languages %}
+                                <option value="{{ language }}"
+                                        {% if language == selected_language %}selected{% endif %}>
+                                    {{ language }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Фильтр по авторам -->
+                    <div class="mb-3">
+                        <h5>Выберите автора</h5>
+                        <select name="author" class="form-select" onchange="updateFormsAndSubmit();">
+                            <option value="">Все авторы</option>
+                            {% for author in authors %}
+                                <option value="{{ author }}"
+                                        {% if author == selected_author %}selected{% endif %}>
+                                    {{ author }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Фильтр по издательствам -->
+                    <div class="mb-3">
+                        <h5>Выберите издательство</h5>
+                        <select name="izdatelstvo" class="form-select" onchange="updateFormsAndSubmit();">
+                            <option value="">Все издательства</option>
+                            {% for izdatelstvo in izdatelstvos %}
+                                <option value="{{ izdatelstvo }}"
+                                        {% if izdatelstvo == selected_izdatelstvo %}selected{% endif %}>
+                                    {{ izdatelstvo }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="submit" style="display: none;"/>
+                </form>
+                <a href="{% url 'list_compositions' %}" class="btn btn-secondary">Сбросить фильтры</a>
+            </div>
+
+            <!-- Карточки произведений справа -->
+            <div class="col-md-9 p-3">
+                <h2 class="text-center mb-4 ads-title">Все объявления</h2>
+                <div class="row ads-map map-margin-top">
+                    <div class="col-12">
+                        <div class="map-legend-bar">
+                            <span class="legend-item"><span class="color-box"
+                                                            style="background: rgba(42,183,172,0.7);"></span> Аренда</span>
+                            <span class="legend-item"><span class="color-box"
+                                                            style="background: rgba(236,211,48,0.7);"></span> Продажа</span>
+                            <span class="legend-item"><span class="color-box"
+                                                            style="background: rgba(245,4,159,0.7);"></span> Аренда и продажа</span>
+                        </div>
+                        <div id="map" style="width: auto; height: 600px"></div>
+                    </div>
+                </div>
+                <h2 class="text-center mb-4">Рекомендации композиций</h2>
+                <div class="row row-cols-1 row-cols-md-4 g-4 recs-composition-margin">
+                    {% for composition in page_obj %}
+                        <div class="col">
+                            <div class="card">
+                                {% if composition.coverphoto != None %}
+                                    <img src="data:image/;base64,{{ composition.coverphoto }}"
+                                         class="card-img-top search-image"
+                                         alt="{{ composition.composition.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/blank.jpg' %}" width="auto" height="auto">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h6 class="card-title composition-author">{{ composition.composition.author }}</h6>
+                                    <h5 class="card-title composition-name">{{ composition.composition.name|slice:"23"|linebreaksbr }}</h5>
+                                    <a class="btn btn-primary"
+                                       href="{% url 'detail_composition' composition.composition.pk %}">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% include 'partial/pagination.html' %}
+            </div>
+        </div>
+    </div>
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+
+    <script>
+        function updateFormsAndSubmit() {
+            document.querySelector('input[type="submit"]').click();
+        }
+    </script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+
+        function init() {
+            var myMap = new ymaps.Map("map", {
+                center: [43.25, 76.93],
+                zoom: 14
+            }, {
+                searchControlProvider: 'yandex#search'
+            })
+            {% for ad in ads %}
+                var myCircle = new ymaps.Circle([
+                    // Координаты центра круга.
+                    {{ ad.coordinates }},
+                    // Радиус круга в метрах.
+                    100
+                ], {
+                    // Описываем свойства круга.
+                    // Содержимое балуна.
+                    balloonContent: `<h3 class="card-title">Объявление №{{ ad.user_shelf.id }}</h3>` +
+                        `<img src="data:image/;base64,{{ ad.coverphoto }}" width="150px" class="img-fluid rounded"
+                         alt="{{ ad.user_shelf }}">` +
+                        ` <ul class="list-group list-group-flush">` +
+                        ` <li class="list-group-item"><strong>Книга:</strong> "{{ ad.book.id_composition.name }}"</li>` +
+                        ` <li class="list-group-item"><strong>Издательство:</strong> "{{ ad.book.izdatelstvo }}"</li>` +
+                        `<li class="list-group-item"><strong>ISBN:</strong> {{ ad.book.isbn }}</li>` +
+                        `<li class="list-group-item"><strong>Состояние:</strong> {{ ad.user_shelf.book_state }}</li>` +
+                        `<li class="list-group-item"><strong>Статус:</strong> {{ ad.user_shelf.status }}</li>` +
+                        `<li class="list-group-item"><strong>Цель:</strong> {{ ad.user_shelf.purpose }}</li>` +
+                        `<li class="list-group-item"><strong>Количество:</strong> {{ ad.user_shelf.count }}</li>` +
+                        `{% if ad.user_shelf.price_for_week %}
+                            <li class="list-group-item"><strong>Цена за неделю:</strong>
+                            {{ ad.user_shelf.price_for_week }} руб.</li>{% endif %}` +
+                        `{% if ad.user_shelf.price_for_sale %}
+                            <li class="list-group-item"><strong>Цена продажи:</strong>
+                            {{ ad.user_shelf.price_for_sale }} руб.</li>{% endif %}` +
+                        `</ul>`,
+                    // Содержимое хинта.
+                    hintContent: "Местоположение книги"
+                }, {
+                    // Задаем опции круга.
+                    // Включаем возможность перетаскивания круга.
+                    draggable: false,
+                    // Цвет заливки.
+                    // Последний байт (77) определяет прозрачность.
+                    // Прозрачность заливки также можно задать используя опцию "fillOpacity".
+                    {% if ad.user_shelf.price_for_week  %}
+                        fillColor: "rgba(42,183,172,0.45)",
+                        // Цвет обводки.
+                        strokeColor: "#8eb2a4",
+                    {% endif %}
+                    {% if ad.user_shelf.price_for_sale  %}
+                        fillColor: "rgba(236,211,48,0.45)",
+                        // Цвет обводки.
+                        strokeColor: "rgba(241,98,9,0.45)",
+                    {% endif %}
+                    {% if ad.user_shelf.price_for_week and ad.user_shelf.price_for_sale  %}
+                        fillColor: "rgba(245,4,159,0.45)",
+                        // Цвет обводки.
+                        strokeColor: "rgba(112,7,10,0.45)",
+                    {% endif %}
+                    // Прозрачность обводки.
+                    strokeOpacity: 0.1,
+                    // Ширина обводки в пикселях.
+                    strokeWidth: 5
+                });
+                console.log('{{ ad.coordinates | safe }}');
+                // Добавляем круг на карту.
+                myMap.geoObjects.add(myCircle);
+            {% endfor %}
+        }
+    </script>
+{% endblock %}

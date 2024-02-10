@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Chat{% endblock %}
+
+{% block link %}
+        <link href="{% static 'css/chats.css' %}" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <title>Chat</title>
+    {% endblock %}
+{% block content %}
+<div class="chat-container">
+    <div class="chat-list">
+        {% comment %} <div class="chat-item active">
+            <div class="avatar">
+                <img src="путь_к_аватарке_1.jpg" alt="Avatar 1">
+            </div>
+            Chat 1
+        </div> {% endcomment %}
+        {% for user, book, user_shelf, coverphoto in users %}
+        <div class="chat-item" data-user-id="{{user.id}}">
+            <div class="avatar">
+                <img src="{{user.avatar.url}}" alt="Avatar 3">
+            </div>
+            <div data-book-id="{{book.id}}"></div>
+            <div data-user-shelf-id="{{user_shelf.id}}"></div>
+            <div data-book-name="{{book.id_composition.name}}"></div>
+            <div data-book-coverphoto="{{coverphoto}}"></div>
+            <span>{{user.username}}</span>
+        </div>
+        {% endfor %}
+        
+    </div>
+    <div class="chat-content">
+        <div class="messages-container">
+            <div class="chat-container">
+                <div class="chat-messages">
+                </div>
+            </div>
+        <div class="chat-input message-input">
+            <input type="text" class="chat-input" id="message-input" placeholder="Введите сообщение">
+            <button id="send-button" class="send-button">Отправить</button>
+        </div>
+    </div>
+</div>
+
+<script> 
+    
+    var senderId = {{request.user.id}} 
+    
+    $('.chat-item').on('click', function() {
+        var userId = $(this).data('user-id');
+        var bookId = $(this).find('[data-book-id]').data('book-id');
+        var userShelfId = $(this).find('[data-user-shelf-id]').data('user-shelf-id');
+        var bookName = $(this).find('[data-book-name]').data('book-name');
+        var bookCoverphoto = $(this).find('[data-book-coverphoto]').data('book-coverphoto');
+    });
+</script>
+<script src="{% static "js/get_all_chat.js" %}"></script>
+<script src="{% static "js/chat_socket.js" %}"></script>
+{% endblock %}

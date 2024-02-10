@@ -1,0 +1,126 @@
+/* Ваши предыдущие стили */
+body {
+    background-image: url("2wCEAAoGBxQUExYUFBQXFhYYGiIcGhkZGRwiIR4iIiIdJCQhIiIgJCojHB8pIRwgJTQjJy0uMTExHSE2OzYwOiowMS4BCwsLDw4PHRERHTIoIicyMjA7Li4yMDIwMDAyMDAwMDAwMDAwMDAwMjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMP");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.chat-container {
+    display: flex;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.9); /* Прозрачный белый фон контейнера */
+}
+
+.chat-list {
+    width: 25%;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.chat-item {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+}
+
+.chat-item.active {
+    background-color: #e0e0e0;
+}
+
+.chat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    max-width: 70%;
+    border-radius: 10px;
+    background-color: #d0f8d0;
+}
+
+/* Ваши предыдущие стили */
+
+/* Добавленные стили */
+.message-input {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ddd;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: #fff;
+}
+
+/* Добавленные стили для аватара в чате */
+.chat-item {
+    display: flex;
+    align-items: center; /* Центрирование элементов по вертикали */
+}
+
+.avatar {
+    width: 40px; /* Выберите желаемый размер аватара */
+    height: 40px;
+    border-radius: 50%; /* Превращаем аватар в круг */
+    margin-right: 10px; /* Расстояние между аватаром и текстом чата */
+    overflow: hidden; /* Обрезаем изображение, чтобы оно не выходило за пределы круга */
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Заполняем круглый аватар изображением с сохранением пропорций */
+}
+
+.my-message {
+    background-color: #007bff;
+    color: #fff;
+    text-align: right;
+    width: 300px;
+}
+
+.other-message {
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    width: 300px;
+}

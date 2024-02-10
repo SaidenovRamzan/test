@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block link %}
+    <link href="{% static 'css/modal_detail_book.css' %}" rel="stylesheet">
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+{% endblock %}
+<title>{% block title %}Главная{% endblock %}</title>
+
+{% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+            integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <div class="container">
+        <p>{{ books.0.get_image_url }}</p>
+
+        <div class="main">
+            <div class="sidebar">
+                <div class="bestsellers">
+                    <p class="menu-header">Новинки в книжном мире</p>
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% if books %}
+                                <div class="carousel-item active">
+                                    <div class="container d-flex justify-content-center">
+                                        <div>
+                                            <button type="button" class="detail-book btn btn-light"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#exampleModalCenteredScrollable"
+                                                    value="{{ books.0.book.id }}">
+                                                    <img src="data:image/;base64,{{ books.0.coverphoto }}" width="150px"
+                                                    height="250px"
+                                                    alt="">
+                                                <p>{{ books.0.book.name }}</p>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% for book in books|slice:"1:" %}
+                                    <div class="carousel-item">
+                                        <div class="container d-flex justify-content-center">
+                                            <div>
+                                                <button type="button" class="detail-book btn btn-light"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#exampleModalCenteredScrollable"
+                                                        value="{{ book.book.pk }}">
+                                                    {% if book.coverphoto != None %}
+                                                    <img src="data:image/;base64,{{ book.coverphoto }}" width="150px"
+                                                         height="250px"
+                                                         alt="">
+                                                    {% else %}
+                                                        <img src="{% static 'images/blank.jpg' %}" width="150px" height="250px">
+                                                    {% endif %}
+                                                    <p>{{ book.book.name }}</p>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="content">
+                <div class="ads-image"></div>
+
+                <div class="content-text">
+                    "Наименование" - первая казахстанская веб-платформа для аренды бумажных книг.
+                    Мы связываем читателей и владельцев книг по всей стране.
+                    Активно пользуясь нашим ресурсом вы спасаете лес.
+                </div>
+
+                <div class="buttons-section">
+                    <div class="buttons-row">
+                        <button>Как сдать в аренду книгу</button>
+                        <button>Топ-20 читаемых книг</button>
+                    </div>
+
+                    <div class="buttons-row">
+                        <button>Сдам в аренду книгу</button>
+                        <button><a href="{% url 'news_list' %}">Новости</a></button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" data-bs-backdrop="static" id="exampleModalCenteredScrollable"
+                 data-bs-keyboard="false"
+                 tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-detail-book-name">Заголовок модального окна</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Закрыть"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="modal-detail-book-image" class="img-fluid modal-detail-book-image" src="#"
+                                 alt="Название книги">
+                            <p class="title-description-book-detail">Описание</p>
+                            <p class="modal-p" id="modal-detail-book-description"></p>
+                            <p class="titles-book-detail">Автор</p>
+                            <p class="modal-p" id="modal-detail-book-author"></p>
+                            <p class="titles-book-detail">Жанр</p>
+                            <p class="modal-p" id="modal-detail-book-genre"></p>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <button id="modal-detail-book-href" class="detail-book-redirect btn btn-warning" value=""
+                                    data-bookid="">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="{% static 'js/modal_detail_book.js' %}"></script>
+
+    </div>
+{% endblock %}

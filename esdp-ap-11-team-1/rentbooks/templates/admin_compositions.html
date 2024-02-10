@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block link %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex">
+        <div class="row d-flex justify-content-end news-admin-button">
+            <div class="col-6">
+                <h4>Функционал администратора:</h4>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-success" href="{% url 'news_create' %}">Создать новость</a>
+            </div>
+        </div>
+    </div>
+    <h3 class="mt-4 mb-4">Композиции</h3>
+    <div id="composition-rows">
+    {% for composition in compositions %}
+        <div class="row mb-2" id="composition_{{ composition.id }}">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ composition.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ composition.author }}</h6>
+                        <p class="card-text">{{ composition.description|slice:"200"|linebreaksbr }}...</p>
+                        <div class="d-flex" style="justify-content: space-between;">
+                            <div class="d-flex">
+                                <a class="btn btn-primary mx-2" href="{% url 'detail_composition' composition.id %}">Подробнее</a>
+                                <a class="btn btn-success mx-2" href="{% url 'update_composition' pk=composition.id %}">Редактировать</a>
+                            </div>
+                            <div class="d-flex">                            
+                                <input class="form-check-input composition" type="checkbox" value="{{ composition.id }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Композиции не найдены</p>
+        {% endfor %}
+    </div>
+    <div class="d-flex">
+        <button type="button" id="selected" class="btn btn-secondary m-2" >Сделать видимым отмеченные</button>
+        <button type="button" id="all" class="btn btn-primary my-2">Сделать видимым все</button>
+    </div>
+</div>
+<script defer src="{% static 'js/admin_composition.js' %}"></script>
+{% endblock %}

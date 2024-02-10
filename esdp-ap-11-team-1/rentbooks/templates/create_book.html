@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+
+{% block content %}
+<div class="container">
+
+    <h3 class="mt-4 mb-4">Добавить книгу</h3>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form square-inputs">
+            {% csrf_token %}
+            {% include "partial/form.html" %}
+            
+        </div>
+        <div class="form_row">
+            {% bootstrap_button button_type="submit" content='Сохранить книгу' button_class="btn btn-primary" %}
+            <a href="{% url 'home' %}">{% bootstrap_button button_type="submit" content='Отменить' button_class="btn btn-primary" %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

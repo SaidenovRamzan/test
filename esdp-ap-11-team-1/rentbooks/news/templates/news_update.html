@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Редактирование новости {{ news.title }}{% endblock %}
+
+{% block content %}
+    <div class="container main-container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-5 card text-bg-light form-margins">
+                <h3 class="news-form-title">Редактирование новости</h3>
+                <form action="{% url 'news_update' news.pk %}" method="post" enctype="multipart/form-data">
+                    {% include 'partial/news_create_and_update_form.html' with button_text='Изменить' %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+.idea/
+data/
+__pycache__/
+rentbooks/data/
+rentbooks/nohup.out
+rentbooks/staticfiles/
+venv/
+media/
+.sqlite3
+!/migrations/__init__.py
+migrations/
+rentbooks/web/.DS_Store
+.DS_Store
+media/images/news/
+.vscode/

@@ -1,0 +1,23 @@
+
+.title-description-book-detail, .titles-book-detail {
+    margin-top: 15px;
+    margin-bottom: 2px;
+    font-size: 25px;
+    line-height: 2.4rem;
+    font-weight: 700;
+}
+
+.titles-book-detail {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: -1px;
+}
+
+.modal-detail-book-image {
+    max-width: 300px;
+}
+
+.modal-title {
+    font-size: 25px;
+    font-weight: 600;
+}

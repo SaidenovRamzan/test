@@ -1,0 +1,20 @@
+span {
+    font-weight: normal
+}
+
+.comment_text {
+    font-style: italic;
+    color: rgb(0, 0, 0);
+}
+
+.card-text {
+    margin-bottom: 6px;
+}
+
+.composition-info-block {
+    margin-top: 20px;
+}
+
+.comp-detail-user-shelf-block {
+    margin-top: 20px;
+}

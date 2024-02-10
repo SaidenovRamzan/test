@@ -1,0 +1,132 @@
+[{
+  "_id": 1,
+  "id_composition": 1,
+  "year": 2018,
+  "izdatelstvo": "ABC",
+  "pages": 340,
+  "coverphoto": {
+    "$oid": "65560b6b0f1c834866d170e4"
+  },
+  "isbn": "123"
+},
+{
+  "_id": 2,
+  "id_composition": 1,
+  "year": 2018,
+  "izdatelstvo": "QAZ",
+  "pages": 300,
+  "coverphoto": {
+    "$oid": "6558e5aa748beb8e72ead61b"
+  },
+  "isbn": "123"
+},
+{
+  "_id": 3,
+  "id_composition": 3,
+  "year": 1987,
+  "izdatelstvo": "Детская книга",
+  "pages": 85,
+  "coverphoto": {
+    "$oid": "655c415c753a3b381ac9cc3e"
+  },
+  "isbn": "123321"
+},
+{
+  "_id": 7,
+  "id_composition": 4,
+  "year": 1976,
+  "izdatelstvo": "Политкнига",
+  "pages": 180,
+  "coverphoto": {
+    "$oid": "655ce7d410d6ee2de42d3a40"
+  },
+  "isbn": "456654"
+},
+{
+  "_id": 8,
+  "id_composition": 5,
+  "year": 1971,
+  "izdatelstvo": "Детская книга",
+  "pages": 80,
+  "coverphoto": {
+    "$oid": "655ece7627beaae09282f74f"
+  },
+  "isbn": "789987"
+},
+{
+  "_id": 9,
+  "id_composition": 2,
+  "year": 2000,
+  "izdatelstvo": "ABC",
+  "pages": 150,
+  "coverphoto": {
+    "$oid": "655f1bf100b4629d3c8ea80c"
+  },
+  "isbn": "456654"
+},
+{
+  "_id": 10,
+  "id_composition": 6,
+  "year": 1985,
+  "izdatelstvo": "21 Fox",
+  "pages": 500,
+  "coverphoto": {
+    "$oid": "6568ab5b7dc30c21e0522ceb"
+  },
+  "isbn": "8766789"
+},
+{
+  "_id": 11,
+  "id_composition": 7,
+  "year": 1987,
+  "izdatelstvo": "ABC",
+  "pages": 200,
+  "coverphoto": {
+    "$oid": "6568ae7d46c0e8d2576fadb7"
+  },
+  "isbn": "123443251"
+},
+{
+  "_id": 12,
+  "id_composition": 8,
+  "year": 1983,
+  "izdatelstvo": "Просвещение",
+  "pages": 180,
+  "coverphoto": {
+    "$oid": "6568b08335d0ad796ce383ef"
+  },
+  "isbn": "3456765432"
+},
+{
+  "_id": 13,
+  "id_composition": 9,
+  "year": 1980,
+  "izdatelstvo": "Просвещение",
+  "pages": 340,
+  "coverphoto": {
+    "$oid": "657049e8f15637f998c5494e"
+  },
+  "isbn": "213456788"
+},
+{
+  "_id": 14,
+  "id_composition": 20,
+  "year": 2018,
+  "izdatelstvo": "ABC",
+  "pages": 340,
+  "coverphoto": {
+    "$oid": "6587e5ca97e013b420f91161"
+  },
+  "isbn": "123123123123"
+},
+{
+  "_id": 15,
+  "id_composition": 21,
+  "year": 2020,
+  "izdatelstvo": "Политкнига",
+  "pages": 240,
+  "coverphoto": {
+    "$oid": "6587f655c33378e6df0b74bf"
+  },
+  "isbn": "12348901234"
+}]

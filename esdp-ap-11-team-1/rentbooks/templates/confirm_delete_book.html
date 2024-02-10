@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block title %}Post confirm delete{% endblock %}
+
+{% block menu %}{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Вы действительно хотите удалить книгу?</h1>
+        <p>
+            <img src="{{ book.coverphoto.url }}" height="auto" width="500">
+        </p>
+        <p>Название книги: {{ book.name }}</p>
+        <p>Автор книги: {{ book.author }} </p>
+        <p>Описание: {{ book.description }}</p>
+        <p>ISBN: {{ book.isbn }} </p>
+        <form method="post">
+            {% csrf_token %}
+            <p><input class="btn btn-danger" type="submit" value="Удалить"></p>
+            <p><a href="{% url 'home' %}" class="btn btn-primary">Отмена</a></p>
+        </form>
+    </div>
+{% endblock %}

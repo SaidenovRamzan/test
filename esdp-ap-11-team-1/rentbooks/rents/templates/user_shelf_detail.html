@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block link %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=58e3f0b7-4b3f-4375-afee-1c084e4ef7ea&lang=ru_RU"
+            type="text/javascript">
+    </script>
+    <link href="{% static 'css/carousel.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/map_legend.css' %}">
+{% endblock %}
+{% block title %}Объявление №{{ user_shelf.id }}{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="card border-0 shadow">
+            <div class="row g-0 align-items-center">
+                <div class="col-lg-4">
+                    <div id="carouselExampleIndicators" class="carousel slide">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                                    class="active" aria-current="true" aria-label="Slide 1"></button>
+                            {% for image in user_images %}
+                                <button type="button" data-bs-target="#carouselExampleIndicators"
+                                        data-bs-slide-to="{{ forloop.counter }}"
+                                        aria-label="Slide {{ forloop.counter }}"></button>
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-image-center carousel-item active">
+                                <img src="data:image/;base64,{{ coverphoto }}" class="d-block "
+                                     alt="{{ user_shelf.get_book_title }}">
+                            </div>
+                            {% for image in user_images %}
+                                <div class="carousel-image-center carousel-item ">
+                                    <img src="{{ image }}" class="d-block" alt="{{ image }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Предыдущий</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Следующий</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card-body">
+                        <h3 class="card-title">Объявление №{{ user_shelf.id }}</h3>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Книга:</strong> "{{ name }}"</li>
+                            <li class="list-group-item"><strong>Издательство:</strong> "{{ izdatelstvo }}"</li>
+                            <li class="list-group-item"><strong>ISBN:</strong> {{ isbn }}</li>
+                            <li class="list-group-item">
+                                <strong>Состояние:</strong> {{ user_shelf.get_book_state_display }}</li>
+                            <li class="list-group-item"><strong>Статус:</strong> {{ user_shelf.get_status_display }}
+                            </li>
+                            <li class="list-group-item"><strong>Цель:</strong> {{ user_shelf.get_purpose_display }}</li>
+                            <li class="list-group-item"><strong>Количество:</strong> {{ user_shelf.count }}</li>
+                            {% if user_shelf.price_for_week %}
+                                <li class="list-group-item"><strong>Цена за
+                                    неделю:</strong> {{ user_shelf.price_for_week }} руб.
+                                </li>
+                            {% endif %}
+                            {% if user_shelf.price_for_sale %}
+                                <li class="list-group-item"><strong>Цена
+                                    продажи:</strong> {{ user_shelf.price_for_sale }} руб.
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 40px">Расположение книги на карте</h3>
+        <div class="map-legend-bar">
+            <span class="legend-item"><span class="color-box"
+                                            style="background: rgba(42,183,172,0.7);"></span> Аренда</span>
+            <span class="legend-item"><span class="color-box"
+                                            style="background: rgba(236,211,48,0.7);"></span> Продажа</span>
+            <span class="legend-item"><span class="color-box" style="background: rgba(245,4,159,0.7);"></span> Аренда и продажа</span>
+        </div>
+        <div id="map" style="width: auto; height: 600px"></div>
+    </div>
+
+    <script type="text/javascript">
+        ymaps.ready(init);
+
+        function init() {
+            var myMap = new ymaps.Map("map", {
+                center: {{ coordinates }},
+                zoom: 16
+            }, {
+                searchControlProvider: 'yandex#search'
+            })
+            var myCircle = new ymaps.Circle([
+                // Координаты центра круга.
+                {{ coordinates }},
+                // Радиус круга в метрах.
+                100
+            ], {
+                // Описываем свойства круга.
+                // Содержимое балуна.
+                balloonContent: `<h3 class="card-title">Объявление №{{ user_shelf.id }}</h3>` +
+                    `<img src="data:image/;base64,{{ coverphoto }}" width="150px" class="img-fluid rounded"
+                         alt="{{ user_shelf.get_book_title }}">` +
+                    ` <ul class="list-group list-group-flush">` +
+                    ` <li class="list-group-item"><strong>Книга:</strong> "{{ name }}"</li>` +
+                    ` <li class="list-group-item"><strong>Издательство:</strong> "{{ izdatelstvo }}"</li>` +
+                    `<li class="list-group-item"><strong>ISBN:</strong> {{ isbn }}</li>` +
+                    `<li class="list-group-item"><strong>Состояние:</strong> {{ user_shelf.get_book_state_display }}</li>` +
+                    `<li class="list-group-item"><strong>Статус:</strong> {{ user_shelf.get_status_display }}</li>` +
+                    `<li class="list-group-item"><strong>Цель:</strong> {{ user_shelf.get_purpose_display }}</li>` +
+                    `<li class="list-group-item"><strong>Количество:</strong> {{ user_shelf.count }}</li>` +
+                    `{% if user_shelf.price_for_week %}<li class="list-group-item"><strong>Цена за неделю:</strong>
+                        {{ user_shelf.price_for_week }} тг.</li>{% endif %}` +
+                    `{% if user_shelf.price_for_sale %}<li class="list-group-item"><strong>Цена продажи:</strong>
+                        {{ user_shelf.price_for_sale }} тг.</li>{% endif %}` +
+                    `</ul>`,
+                // Содержимое хинта.
+                hintContent: "Местоположение книги"
+            }, {
+                // Задаем опции круга.
+                // Включаем возможность перетаскивания круга.
+                draggable: false,
+                // Цвет заливки.
+                // Последний байт (77) определяет прозрачность.
+                // Прозрачность заливки также можно задать используя опцию "fillOpacity".
+                fillColor: "rgba(42,183,172,0.45)",
+                // Цвет обводки.
+                strokeColor: "#8eb2a4",
+                // Прозрачность обводки.
+                strokeOpacity: 0.1,
+                // Ширина обводки в пикселях.
+                strokeWidth: 5
+            });
+
+            // Добавляем круг на карту.
+            myMap.geoObjects.add(myCircle);
+        }
+    </script>
+{% endblock %}

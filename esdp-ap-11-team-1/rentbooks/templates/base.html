@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% block link %}{% endblock link %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+<script>
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+
+    const baseUrl = `${protocol}//${hostname}${port ? `:${port}` : ''}`;
+</script>
+<div>
+    <div class="navbar">
+        <div class="logo">
+            <a href="{% url 'home' %}"><img class="logo-navbar" src="{% static '/images/m_logo-2.png' %}" alt="Логотип"/></a>
+        </div>
+
+        <div>
+            <input class="search" type="text" id="search-query" placeholder="Поиск"/>
+            <button type="button" class="btn btn-outline-success" id="search-button">Искать</button>
+        </div>
+        <div id="search-results-container" class="search-results-container">
+             <!-- Контейнер для результатов поиска -->
+        </div>
+        <div class="navbar-controls">
+            {% if user.is_staff %}
+            <a href="{% url 'composition_admin' %}">
+                <button type="button" class="btn btn-outline-success">Админ панель</button>
+            </a>
+            {% endif %}
+            <a href="{% url 'list_compositions' %}">
+                <button type="button" class="btn btn-outline-success">
+                    Книги
+                </button>
+            </a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}">
+                    <button type="button" class="btn btn-outline-success">Войти</button>
+                </a>
+                <a href="{% url 'registration' %}">
+                    <button type="button" class="btn btn-outline-success">Регистрация</button>
+                </a>
+            {% else %}
+                <a href="{% url 'all_chat' %}">
+                    <button type="button" class="btn btn-outline-success">Чат</button>
+                </a>
+                <a href="{% url 'user_profile' %}">
+                    <button type="button" class="btn btn-outline-success">Профиль</button>
+                </a>
+                <a href="{% url 'create_all_book' %}">
+                    <button type="button" class="btn btn-outline-success">Добавить книгу</button>
+                </a>
+                <a href="{% url 'logout' %}">
+                    <button type="button" class="btn btn-outline-success">Выйти</button>
+                </a>
+            {% endif %}
+            <!-- <select type="button" class="btn btn-outline-success">
+                <option value="ru">Русский</option>
+                <option value="en">Қазақша</option>
+            </select> -->
+        </div>
+    </div>
+
+    {% block menu %}{% endblock %}
+
+
+    {% block content %}{% endblock %}
+</div>
+<footer class="footer">
+    Любой текст в футере для демонстрации.
+    <br/>
+    <a href="#">Жалобы и предложения</a>
+</footer>
+
+<script src="{% static 'js/index_search_request.js' %}"></script>
+</body>
+
+</html>

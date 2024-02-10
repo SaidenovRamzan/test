@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+<title>{% block title %}Результат поиска{% endblock %}</title>
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h2 class="result-books-title">Результат поиска</h2>
+        </div>
+        {% if books %}
+            <div class="row row-cols-4  g-4">
+                {% for book in books %}
+                    <div class="col">
+                        <div class="card">
+                            <img src="{{ book.coverphoto.url }}" class="card-img-top search-image"
+                                 alt="{{ book.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ book.name|slice:"24"|linebreaksbr }}</h5>
+                                <h6 class="card-title">{{ book.author }}</h6>
+                                <p class="card-text">{{ book.description|slice:"200"|linebreaksbr }}...</p>
+                                <a class="btn btn-primary" href="{% url 'detail_composition' book.pk %}">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h5>По вашему запросу книг не найдено.</h5>
+        {% endif %}
+    </div>
+{% endblock %}

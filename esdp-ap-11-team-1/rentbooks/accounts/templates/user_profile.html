@@ -1,0 +1,457 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    {% block link %}
+        <link href="{% static 'css/user_profile.css' %}" rel="stylesheet">
+    {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+            integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <div class="container py-5">
+        <!-- User Profile Section -->
+        <div class="row align-items-start">
+            <div class="col-12 col-lg-4 text-center mb-4">
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" class="img-fluid mb-3 user-avatar" alt="{{ user.username }}">
+                {% else %}
+                    <img src="{% static 'images/not_avatar.png' %}" class="img-fluid mb-3 user-avatar"
+                         alt="{{ user.username }}">
+                {% endif %}
+                <button id="add-book-to-shelf-button" type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#modal-add-book-to-shelf">Добавить книгу на полку
+                </button>
+                <button id="add-book-to-shelf-button" type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+                        data-bs-target="#modal-send-message">Связать Telegram
+                </button>
+            </div>
+            <div class="col-12 col-lg-8">
+                <div class="bg-light p-4 rounded">
+                    <h2 class="mb-4">Ваш профиль</h2>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Имя пользователя:</label>
+                        <div class="col-sm-8">{{ user.username }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Номер телефона:</label>
+                        <div class="col-sm-8">{{ user.phone }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Возраст:</label>
+                        <div class="col-sm-8">{{ user.age }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Email:</label>
+                        <div class="col-sm-8">{{ user.email }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Имя:</label>
+                        <div class="col-sm-8">{{ user.first_name }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Фамилия:</label>
+                        <div class="col-sm-8">{{ user.last_name }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Пол:</label>
+                        <div class="col-sm-8">{{ user.gender }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Образование:</label>
+                        <div class="col-sm-8">{{ user.education }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Город:</label>
+                        <div class="col-sm-8">{{ user.city }}</div>
+                    </div>
+                    <div class="form-group row mb-3">
+                        <label class="col-sm-4 col-form-label">Адрес:</label>
+                        <div class="col-sm-8">{{ user.address }}</div>
+                    </div>
+                    <a href="{% url 'update_profile' pk=user.pk %}" class="btn btn-outline-primary w-100 mt-4">Редактировать
+                        профиль</a>
+                </div>
+            </div>
+        </div>
+
+        {# Заявки к пользователю #}
+        <h2 class="mb-4">Заявки ко мне</h2>
+        <div class="row orders-to-me">
+            {% if orders_to_me %}
+            {% for order in orders_to_me %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4" id="card-order-to-me-{{ order.order.id }}">
+                    <div class="card h-100 shadow-sm">
+                        <div class="row g-0 h-100">
+                            <div class="col-md-5 d-flex align-items-stretch">
+                                <img src="data:image/;base64,{{ order.coverphoto }}" class="card-img h-100"
+                                     alt="{{ order.book.id_composition.name }}">
+                            </div>
+                            <div class="col-md-7 d-flex flex-column">
+                                <div class="card-body">
+                                    <h5 class="card-title">Объявление № {{ order.order.id }}</h5>
+                                    <p class="card-text"><strong>Книга:</strong>
+                                        "{{ order.book.id_composition.name }}"</p>
+                                    <p class="card-text">
+                                        <strong>Автор:</strong> {{ order.book.id_composition.author }}
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Описание:</strong> {{ order.book.id_composition.description|slice:"50" }}...
+                                    </p>
+                                    <p class="card-text"><strong>ISBN:</strong> {{ order.book.isbn }}
+                                    </p>
+                                </div>
+                                <div class="card-footer mt-auto bg-white">
+                                    <input type="text" name="order_id" value="{{ order.order.id }}" hidden>
+                                    {% if order.order.is_approved == None %}
+                                        <button class="btn btn-success accept_order" id="accept_order_{{ order.order.id }}">Принять</button>
+                                        <button class="btn btn-danger decline_order" id="decline_order_{{ order.order.id }}">Отклонить</button>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer mt-auto bg-white">
+                                    <a class="btn btn-primary"
+                                       href="{% url 'order_detail' order.order.id %}">Подробнее</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <p class="text-muted" id="no-orders-to-me-text" style="display: none;">Заявок нет</p>
+            {% else %}
+                <p class="text-muted" id="no-orders-to-me-text">Заявок нет</p>
+            {% endif %}
+        </div>
+
+        {# Заявки пользователя #}
+        <h2 class="mb-4">Мои заявки</h2>
+        <div class="row my-orders">
+            {% if my_orders %}
+            {% for order in my_orders %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4" id="card-order-{{ order.order.id }}">
+                    <div class="card h-100 shadow-sm">
+                        <div class="row g-0 h-100">
+                            <div class="col-md-5 d-flex align-items-stretch">
+                                <img src="data:image/;base64,{{ order.coverphoto }}" class="card-img h-100"
+                                     alt="{{ order.book.id_composition.name }}">
+                            </div>
+                            <div class="col-md-7 d-flex flex-column">
+                                <div class="card-body">
+                                    <h5 class="card-title">Объявление № {{ order.order.id }}</h5>
+                                    <p class="card-text"><strong>Книга:</strong>
+                                        "{{ order.book.id_composition.name }}"</p>
+                                    <p class="card-text">
+                                        <strong>Автор:</strong> {{ order.book.id_composition.author }}
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Описание:</strong> {{ order.book.id_composition.description|slice:"50" }}...
+                                    </p>
+                                    <p class="card-text"><strong>ISBN:</strong> {{ order.book.isbn }}
+                                    </p>
+                                </div>
+                                {% if order.order.is_approved == None %}
+                                <div class="card-footer mt-auto bg-white">
+                                    <input type="text" name="order_id" value="{{ order.order.id }}" hidden>
+                                    <button class="btn btn-danger cancel_order" data-order-id="{{ order.order.id }}">Отменить</button>
+                                </div>
+                                {% endif %}
+                                <div class="card-footer mt-auto bg-white">
+                                    <a class="btn btn-primary"
+                                       href="{% url 'order_detail' order.order.id %}">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <p class="text-muted" id="no-orders-text" style="display: none;">Заявок нет</p>
+            {% else %}
+                <p class="text-muted">Заявок нет</p>
+            {% endif %}
+        </div>
+
+        {# Объявления #}
+        <h2 class="mb-4">Мои объявления</h2>
+        <div class="row">
+            {% for user_shelf_object in user_shelf_objects %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="row g-0 h-100">
+                            <div class="col-md-5 d-flex align-items-stretch">
+                                <img src="data:image/;base64,{{ user_shelf_object.coverphoto }}" class="card-img h-100"
+                                     alt="{{ user_shelf_object.book.id_composition.name }}">
+                            </div>
+                            <div class="col-md-7 d-flex flex-column">
+                                <div class="card-body">
+                                    <h5 class="card-title">Объявление № {{ user_shelf_object.user_shelf.pk }}</h5>
+                                    <p class="card-text"><strong>Книга:</strong>
+                                        "{{ user_shelf_object.book.id_composition.name }}"</p>
+                                    <p class="card-text">
+                                        <strong>Автор:</strong> {{ user_shelf_object.book.id_composition.author }}
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Описание:</strong> {{ user_shelf_object.book.id_composition.description|slice:"50" }}...
+                                    </p>
+                                    <p class="card-text"><strong>ISBN:</strong> {{ user_shelf_object.book.isbn }}
+                                    </p>
+                                </div>
+                                <div class="card-footer mt-auto bg-white">
+                                    <button class="btn btn-warning append-images-buttons" id="add-photo-to-usershelf"
+                                            type="button"
+                                            data-bs-toggle="modal" value="{{ user_shelf_object.user_shelf.id }}"
+                                            data-bs-target="#modal-add-photo-to-usershelf">Добавить фото
+                                    </button>
+                                </div>
+                                <div class="card-footer mt-auto bg-white">
+                                    <a class="btn btn-primary"
+                                       href="{% url 'user_shelf_detail' user_shelf_object.user_shelf.id %}">Подробнее</a>
+                                </div>
+                                <div class="card-footer mt-auto bg-white">
+                                    <a class="btn btn-primary"
+                                       href="{% url 'close_user_shelf' user_shelf_object.user_shelf.id %}">Закрыть</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-muted">Объявлений нет</p>
+            {% endfor %}
+        </div>
+
+        {# Избранное #}
+        <h2 class="mb-4">Избранное</h2>
+        <div id="book-row" class="row row-cols-4 g-4">
+            {% for favorite in favorites %}
+                <div class="col" id="book_{{ favorite.book.id_composition.name|slice:10 }}">
+                    <input type="text" name="book_id" value="{{ favorite.book.id }}" hidden>
+                    <input type="text" name="user_id" value="{{ user.id }}" hidden>
+                    <div class="card book-card">
+                        <img src="data:image/;base64,{{ favorite.coverphoto }}" class="card-img-top search-image"
+                             alt="{{ favorite.book.id_composition.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ favorite.book.id_composition.name }}</h5>
+                            <h6 class="card-title">{{ favorite.book.id_composition.author }}</h6>
+                            <p class="card-text">{{ favorite.book.id_composition.description|slice:"200"|linebreaksbr }}...</p>
+                            <a class="btn btn-primary"
+                               href="{% url 'detail_composition' favorite.book.id_composition.id %}">Подробнее</a>
+                            <button class="btn btn-danger remove_favorite" data-book-id="{{ favorite.book.id }}">
+                                Убрать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.last %}
+                    <p style="display: none;" id="no-fav-text">Избранных книг нет</p>
+                {% endif %}
+            {% empty %}
+                <p>Избранных книг нет</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Модальное окно для отправки сообщений -->
+    <div class="mb-4">
+        <div class="modal fade" data-bs-backdrop="static" id="modal-send-message" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-width">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="">Отправить сообщение</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body modal-body-margin">
+                        <!-- Форма для отправки сообщений -->
+                        <form id="message-form">
+                            <div class="mb-3">
+                                <label for="user-id-input" class="form-label"><a href="https://t.me/RentBookBot">Bot</a> нажмите на старт и получите ID Telegrama. Введите его ниже</label>
+                                <input type="hidden" class="form-control" id="user-id-input" name="user_id" value="{{user.id}}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="telegram-id-input" class="form-label">ID Telegram:</label>
+                                <input type="text" class="form-control" id="telegram-id-input" name="telegram_id" required>
+                            </div>
+                            <button type="button" id="telegram-id-input3" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <button type="submit" id="telegram-id-input4" class="btn btn-primary">Отправить сообщение</button>
+                        </form>
+                        <form id="code-form">
+                            <div class="mb-3">
+                                <label for="telegram-code-input" class="form-label">Code:</label>
+                                <input type="text" class="form-control hidden" id="telegram-code-input" name="code">
+                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" id='telegram-code-input1' class="btn btn-secondary hidden" data-bs-dismiss="modal">Закрыть</button>
+                                    <button type="submit" id='telegram-code-input2' class="btn btn-primary hidden">Отправить сообщение</button>
+                                </div>
+                            </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {#   Модальное окно для добавления книги на полку  #}
+        <div class="modal fade" data-bs-backdrop="static" id="modal-add-book-to-shelf" data-bs-keyboard="false"
+             tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-width">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="">Добавление книги на полку</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body modal-body-margin">
+                        <h4>Введите название книги</h4>
+                        <input class="search-book" type="text" id="search-book-for-shelf-query" placeholder="Поиск"/>
+                        <button type="button" class="btn btn-outline-success" id="search-book-for-shelf-button">
+                            Искать
+                        </button>
+                        <h5 class="result-search-title">Результат поиска</h5>
+                        <div class="row" id="searched-books-list">
+                        </div>
+                        <div class="row" id="book-publish-houses"></div>
+                        <div class="row book-blocks-margin" id="book-years"></div>
+                        <div class="row isbn-block-margin book-blocks-margin" id="book-isbn"></div>
+                        <div class="row book-state-block" id="book-state">
+                            <div class="col-12" id="book-state">
+                                <h5>Выберете состояние вашей книги</h5>
+                                <div class="form-check">
+                                    <input value="new" class="form-check-state-input form-check-input" type="radio"
+                                           name="stateRadio0" id="stateRadio0" checked>
+                                    <label class="form-check-state-label form-check-label"
+                                           for="stateRadio0">Новая</label>
+                                </div>
+                                <div class="form-check">
+                                    <input value="used" class="form-check-state-input form-check-input" type="radio"
+                                           name="stateRadio0" id="stateRadio1">
+                                    <label class="form-check-state-label form-check-label"
+                                           for="stateRadio1">Использованная</label>
+                                </div>
+                                <div class="form-check">
+                                    <input value="damaged" class="form-check-state-input form-check-input" type="radio"
+                                           name="stateRadio0" id="stateRadio2">
+                                    <label class="form-check-state-label form-check-label"
+                                           for="stateRadio2">Поврежденная</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row book-status-block book-blocks-margin" id="book-status-block">
+                            <div class="col-12" id="book-status">
+                                <h5>Выберете статус объявления</h5>
+                                <div class="form-check">
+                                    <input value="available" class="form-check-status-input form-check-input"
+                                           type="radio"
+                                           name="status-input" id="available" checked>
+                                    <label class="form-check-status-label form-check-label"
+                                           for="available">Доступное</label>
+                                </div>
+                                <div class="form-check">
+                                    <input value="checked_out" class="form-check-status-input form-check-input"
+                                           type="radio"
+                                           name="status-input" id="checked_out">
+                                    <label class="form-check-status-label form-check-label"
+                                           for="checked_out">Проверенное</label>
+                                </div>
+                                <div class="form-check">
+                                    <input value="reserved" class="form-check-status-input form-check-input"
+                                           type="radio"
+                                           name="status-input" id="reserved">
+                                    <label class="form-check-status-label form-check-label"
+                                           for="reserved">Зарезервированное</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row book-purpose-block book-blocks-margin" id="book-purpose-block">
+                            <div class="col-12" id="book-purpose">
+                                <h5>Выберете цель объявления</h5>
+                                <div class="form-check">
+                                    <input value="rent" class="form-check-purpose-input form-check-input" type="radio"
+                                           name="price-input" id="rent" checked>
+                                    <label class="form-check-purpose-label form-check-label" for="rent">Аренда</label>
+                                </div>
+                                <div class="form-check">
+                                    <input value="sale" class="form-check-purpose-input form-check-input" type="radio"
+                                           name="price-input" id="sale">
+                                    <label class="form-check-purpose-label form-check-label" for="sale">Продажа</label>
+                                </div>
+                                <div class="form-check">
+                                    <input value="rent and sale" class="form-check-purpose-input form-check-input"
+                                           type="radio" name="price-input" id="rent-and-sale">
+                                    <label class="form-check-purpose-label form-check-label" for="rent-and-sale">Аренда
+                                        и
+                                        Продажа</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row book-count-block book-blocks-margin" id="book-count-block">
+                            <div class="col-12">
+                                <h5>Выберете количество книг</h5>
+                                <input value="1" class="form-check-purpose-input form-control input-numbers-width"
+                                       width="60px" type="number" name="count" id="book-count-input" placeholder="1">
+                            </div>
+                        </div>
+                        <div class="row book-blocks-margin">
+                            <div class="col-12" id="input-price-block"></div>
+                        </div>
+                        <div class="row" id="book-append">
+                            <div class="col-12 book-append-yourself">
+                                <h5 class="title-book-append">Нет вашей книги?</h5>
+                                <a class="btn btn-outline-success" href="{% url 'create_all_book' %}">Добавить свою</a>
+                            </div>
+                            <div class="col-12 book-append-yourself">
+                                <h5 class="title-book-append">Есть какие-то не совпадения?</h5>
+                                <a class="btn btn-outline-success" href="{% url 'create_book' %}">Добавить свою</a>
+                            </div>
+                        </div>
+                        <div id="user-id" data-user-id="{{ user.id }}"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="btn-append-usershelf" disabled>Сохранить
+                            изменения
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <!-- Модальное окно для добавления картинок в объявления -->
+        <div class="modal fade" data-bs-backdrop="static" id="modal-add-photo-to-usershelf" data-bs-keyboard="false"
+             tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-width-images">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="append-images-title">Добавление картинок в объявление</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body modal-body-margin" id="modal-append-images-body">
+                        <form id="image-upload-form">
+                            <div id="image-inputs-container" class="image-inputs-container">
+                                <div class="image-input-group mb-2">
+                                    <input type="file" class="form-control image-input" name="images[]">
+                                    <div class="image-buttons-container">
+                                        <button type="button" class="btn btn-success add-image-button">+</button>
+                                        <button type="button" class="btn btn-danger remove-image-button">-</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="user-id" data-user-id="{{ user.id }}"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="btn-append-images">Сохранить
+                            изменения
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script defer src="{% static 'js/telegram_confirm.js' %}"></script>
+    <script defer src="{% static 'js/profile.js' %}"></script>
+    <script src="{% static 'js/create_user_book_field.js' %}"></script>
+    <script src="{% static 'js/append_images_to_usershelf.js' %}"></script>
+{% endblock %}

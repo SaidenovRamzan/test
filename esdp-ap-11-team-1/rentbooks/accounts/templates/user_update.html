@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6" style="background-color: lightblue;">
+        <div class="custom-form p-4">
+          <h2 class="mb-4">Create User</h2>
+          <form method="post">
+            {% csrf_token %}
+            {% include "partial/form.html"  %}
+            <button type="submit" class="btn btn-primary btn-block mt-4">Update User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

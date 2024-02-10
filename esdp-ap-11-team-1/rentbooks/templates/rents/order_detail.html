@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block link %}
+<link href="{% static 'css/carousel.css' %}" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+
+
+{% block title %}Order detail{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card border-0 shadow">
+        <div class="row g-0 align-items-center">
+            <div class="col-lg-4">
+                <div id="carouselExampleIndicators" class="carousel slide">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                        {% for image in user_images %}
+                        <button type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="{{ forloop.counter}}" aria-label="Slide {{ forloop.counter }}"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-image-center carousel-item active">
+                            <img src="data:image/;base64,{{ coverphoto }}" class="d-block "
+                                alt="{{ user_shelf.get_book_title }}">
+                        </div>
+                        {% for image in user_images %}
+                        <div class="carousel-image-center carousel-item ">
+                            <img src="{{ image }}" class="d-block" alt="{{ image }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Предыдущий</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Следующий</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body">
+                    <h3 class="card-title status-title">Заказ №{{ order.id }}
+                        <span>&nbsp;Статус обработки:
+                            {% if order.is_approved == None %}
+                                <span>Рассматривается</span>
+                            {% elif order.is_approved == True and order.date_fact_end == None and order.date_fact_start == None and order.purpose == 'rent' %}
+                                <span>Одобрена</span>
+                            {% elif order.is_approved == False %}
+                                <span>Отказано</span>
+                            {% elif order.date_fact_start != None and order.date_fact_end != None and order.purpose == 'rent' %}
+                                <span>Аренда завершена</span>
+                            {% elif order.date_fact_start != None and order.purpose == 'rent' %}
+                                <span>В Аренде</span>
+                            {% elif order.usershelf.status == 'reserved' and order.purpose == 'buy' %}
+                                <span>Ожидает оплаты</span>
+                            {% elif order.usershelf.status == 'sold' and order.purpose == 'buy' %}
+                                <span>Продано</span>
+                            {% endif %}
+                        </span>
+                    </h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Книга:</strong> "{{ name }}"</li>
+                        <li class="list-group-item"><strong>Автор:</strong> "{{ author }}"</li>
+                        <li class="list-group-item"><strong>Издательство:</strong> "{{ izdatelstvo }}"</li>
+                        <li class="list-group-item"><strong>ISBN:</strong> {{ isbn }}</li>
+                        <li class="list-group-item">
+                            <strong>Состояние:</strong> {{ book_state }}
+                        </li>
+                        <li class="list-group-item"><strong>Статус:</strong> <span class="status-list"> {{ status }}</span></li>
+                        <li class="list-group-item"><strong>Количество:</strong> {{ count }}</li>
+                        <li class="list-group-item"><strong>Заказчик:</strong> {{ order.user }}</li>
+                        <li class="list-group-item"><strong>Планируемое начало аренды:</strong> {{ order.date_plan_start }}</li>
+                        <li class="list-group-item"><strong>Планируемое окончание аренды:</strong> {{ order.date_plan_end }}</li>
+                        <li class="list-group-item"><strong>Активность заявки:</strong> {{ order.is_active }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="text" id="order_id" value="{{ order.id }}" hidden>
+    {% if order.is_approved == True %}
+    {% if order.user.id == request.user.id and order.purpose == 'buy'%}
+    <div class="card border-0 shadow mt-3">
+        <div class="card-body">
+            {% if order.date_fact_start == None and order.usershelf.status == 'reserved' %}
+            <div class="rent-div">
+                <input type="text" id="numbers_for_renter" class="form-control mt-3" placeholder="Введите код для покупки">
+                <button type="submit" class="btn btn-primary mt-3 start">Отправить</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% if order.user.id == request.user.id and order.purpose == 'rent' %}
+    <div class="card border-0 shadow mt-3">
+        <div class="card-body">
+            {% if order.number_for_renter != 0 %}
+            <h5 class="card-title">Код для окончания аренды</h5>
+            <b class="card-text">
+                {{ order.number_for_renter }}
+            </b>
+            {% endif %}
+            {% if order.date_fact_start == None %}
+            <div class="rent-div">
+                <input type="text" id="numbers_for_renter" class="form-control mt-3" placeholder="Введите код для начала аренды">
+                <button type="submit" class="btn btn-primary mt-3 start">Отправить</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% if order.usershelf.user.id == request.user.id %}
+    <div class="card border-0 shadow mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Код для начала аренды</h5>
+            <b class="card-text">
+                {{ order.number_for_owner }}
+            </b>
+        <div class="rent-div">
+            {% if order.date_fact_end == None and order.date_fact_start != None %}
+            <input type="text" id="numbers_for_owner" class="form-control mt-3" placeholder="Введите код для окончания аренды">
+            <button type="submit" class="btn btn-primary mt-3 finish">Отправить</button>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+
+<script defer src="{% static 'js/order_detail.js' %}"></script>
+{% endblock %}

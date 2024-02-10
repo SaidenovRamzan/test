@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Все новости{% endblock %}
+
+{% block link %}
+    <link href="{% static 'css/pagination.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row d-flex justify-content-between ">
+            <div class="col-4">
+                <h1 class="title-news-list">Список новостей</h1>
+            </div>
+            {% if user.is_staff %}
+                <div class="col-7">
+                    <div class="row d-flex justify-content-end news-admin-button">
+                        <div class="col-6">
+                            <h4>Функционал администратора:</h4>
+                        </div>
+                        <div class="col-4">
+                            <a class="btn btn-success" href="{% url 'news_create' %}">Создать новость</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="row row-cols-3">
+            {% if news %}
+                {% for new in news %}
+                    <div class="col news-cards-margin">
+                        <div class="card">
+                            <img src="{{ new.image.url }}" class="card-img-top" alt="{{ new.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ new.title }}</h5>
+                                <p class="card-text">{{ new.content|slice:"150"|linebreaksbr }}...</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                {% load tz %}
+                                <li class="list-group-item">{{ new.updated_at }}</li>
+                            </ul>
+                            <div class="card-body">
+                                <a href="{% url 'news_detail' new.pk %}" class="btn btn-primary">Подробнее</a>
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'news_update' new.pk %}" class="btn btn-success">Редактировать</a>
+                                    <a href="{% url 'news_delete' new.pk %}" class="btn btn-danger">Удалить</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Упс! Новостей пока нет.</p>
+            {% endif %}
+        </div>
+        {% if is_paginated %}
+            {% include 'partial/pagination.html' %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block link %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=58e3f0b7-4b3f-4375-afee-1c084e4ef7ea&lang=ru_RU"
+            type="text/javascript">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+            integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="{% static 'css/detail_book.css' %}">
+    <link rel="stylesheet" href="{% static 'css/map_legend.css' %}">
+{% endblock %}
+{% block menu %}
+{% endblock %}
+
+{% block content %}
+    <div class="container composition-info-block">
+        <div class="row row g-flex justify-content-center">
+            {% if book %}
+                <div class="col-4">
+                    {% if coverphoto_base64 %}
+                    <p>
+                        <img class="img-fluid" src="data:image/;base64,{{ coverphoto_base64 }}"
+                             alt="{{ book.name }} Cover">
+                    </p>
+                    {% else %}
+                    <p>
+                        <img class="img-fluid" src="{% static 'images/blank.jpg' %}"
+                             alt="{{ book.name }} Cover">
+                    </p>
+                    {% endif %}
+                </div>
+                <div class="col-4">
+                    <h2> Информация о книге </h2>
+                    <p>Название книги: {{ book.name }}</p>
+                    <p>Автор книги: {{ book.author }} </p>
+                    <p>Жанр: {{ book.id_genre.name }}</p>
+                    <p>Описание: {{ book.description }}</p>
+                    <p id="average-rating">Рейтинг: {{ avg_rating }}</p>
+                    <h6>Оценить</h6>
+                    <div class="rating">
+                        {% for star_num in "54321"|stringformat:"s" %}
+                            <input class="star-rating-input" type="radio" id="star-{{ star_num }}" name="rating"
+                                   value="{{ star_num }}"
+                                    {% if rating == star_num %} checked {% endif %}>
+                            <label for="star-{{ star_num }}" title="Оценка «{{ star_num }}»"></label>
+                        {% endfor %}
+                    </div>
+                    {% if user.is_authenticated %}
+                        {% if favorites %}
+                            <button type="button" id="add_{{ book.id }}" class="add-to-favorites btn btn-success"
+                                    style="display: none;">В избранное
+                            </button>
+                            <input type="text" name="user_id" value="{{ request.user.id }}" hidden>
+                            <input type="text" name="book_id" value="{{ book.id }}" hidden>
+                            <button type="button" id="remove_{{ book.id }}"
+                                    class="remove-from-favorites btn btn-warning">
+                                Удалить из избранного
+                            </button>
+                        {% else %}
+                            <button type="button" id="add_{{ book.id }}" class="add-to-favorites btn btn-success">В
+                                избранное
+                            </button>
+                            <input type="text" name="user_id" value="{{ request.user.id }}" hidden>
+                            <input type="text" name="book_id" value="{{ book.id }}" hidden>
+                            <button type="button" id="remove_{{ book.id }}"
+                                    class="remove-from-favorites btn btn-warning"
+                                    style="display: none;">Удалить из избранного
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <h2>Список объвлений на карте</h2>
+            </div>
+            <div class="col-12">
+                <div class="map-legend-bar">
+                    <span class="legend-item"><span class="color-box" style="background: rgba(42,183,172,0.7);"></span> Аренда</span>
+                    <span class="legend-item"><span class="color-box"
+                                                    style="background: rgba(236,211,48,0.7);"></span> Продажа</span>
+                    <span class="legend-item"><span class="color-box" style="background: rgba(245,4,159,0.7);"></span> Аренда и продажа</span>
+                </div>
+                <div id="map" style="width: auto; height: 600px"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ads-block">
+        <div class="row g-flex justify-content-center comp-detail-user-shelf-block">
+            <div class="col-10">
+                <h2>Список объявлений по книге</h2>
+            </div>
+        </div>
+        <div class="row g-flex justify-content-center">
+            {% if ads %}
+                {% for ad in ads %}
+                    <div class="col-5">
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img class="img-fluid rounded-start"
+                                         src="data:image/;base64,{{ ad.coverphoto }}"
+                                         width="auto" height="500"
+                                         alt="{{ ad.book.name }} Cover">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Объявление №{{ ad.user_shelf.id }}</h5>
+                                        <p class="card-text"><b>Название:</b> {{ ad.book.id_composition.name }}</p>
+                                        <p class="card-text"><b>Издательство:</b> {{ ad.book.izdatelstvo }}</p>
+                                        <p class="card-text"><b>Год выпуска:</b> {{ ad.book.year }}</p>
+                                        <p class="card-text"><b>Аренда в неделю:</b>
+                                            {% if ad.user_shelf.price_for_week %}
+                                                {{ ad.user_shelf.price_for_week }}тг
+                                            {% else %}
+                                                Не для аренды
+                                            {% endif %}
+                                        </p>
+                                        <p class="card-text"><b>Стоимость продажи:</b>
+                                            {% if  ad.user_shelf.price_for_sale %}
+                                                {{ ad.user_shelf.price_for_sale }}тг
+                                            {% else %}
+                                                Не для продажи
+                                            {% endif %}
+                                        </p>
+                                        <p class="card-text"><b>Состояние книги:</b> {{ ad.user_shelf.book_state }}
+                                        </p>
+                                        <p class="card-text"><b>Владелец:</b>
+                                            <a href="{% url 'user_page' pk=ad.user_shelf.user.id %}">
+                                                {{ ad.user_shelf.user.username }}
+                                            </a>
+                                        </p>
+                                        {% if user.is_authenticated %}
+                                            {% if ad.user_shelf.status == 'available' and ad.user_shelf.user.id != request.user.id and ad.order == None %}
+                                                <div class="take-order take-order-{{ ad.user_shelf.id }}">
+                                                    <button type="submit"
+                                                            class="btn btn-warning open-modal open-modal-{{ ad.user_shelf.id"
+                                                            data-usershelf-id="{{ ad.user_shelf.id }}" data-ad="{{ ad.user_shelf }}" data-operation-type="{{ ad.user_shelf.purpose }}">Создать заказ
+                                                    </button>
+                                                    <a class="btn btn-primary" href="{% url 'user_shelf_detail' pk=ad.user_shelf.id %}">Подробнее</a>
+                                                </div>
+                                            {% elif ad.user_shelf.status == 'in_rent' and ad.user_shelf.user.id != request.user.id and ad.order.user_id != request.user.id %}
+                                                <div class="take-order take-order-{{ ad.user_shelf.id }}">
+                                                    <button type="submit"
+                                                        class="btn btn-warning open-modal open-modal-{{ ad.user_shelf.id }}"
+                                                        data-usershelf-id="{{ ad.user_shelf.id }}" data-operation-type="{{ ad.user_shelf.purpose }}">Зарезервировать
+                                                    </button>
+                                                        <a class="btn btn-primary" href="{% url 'user_shelf_detail' pk=ad.user_shelf.id %}">Подробнее</a>
+                                                </div>
+                                            {% elif ad.user_shelf.user.id == request.user.id and ad.order != None %}                                                
+                                                <a class="btn btn-success" href="{% url 'order_detail' pk=ad.order.id %}">Перейти к заявке</a>
+                                                <a class="btn btn-primary" href="{% url 'user_shelf_detail' pk=ad.user_shelf.id %}">Подробнее</a>
+                                            {% elif ad.order.user.id == request.user.id %}
+                                                <a class="btn btn-success" href="{% url 'order_detail' pk=ad.order.id %}">Перейти к заявке</a>
+                                                <a class="btn btn-primary" href="{% url 'user_shelf_detail' pk=ad.user_shelf.id %}">Подробнее</a>
+                                            {% else %}
+                                                <a class="btn btn-primary" href="{% url 'user_shelf_detail' pk=ad.user_shelf.id %}">Подробнее</a>
+                                            {% endif %}           
+                                        {% endif %}                                 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+            <div class="col-10">
+                <p>Объявлений по этой книге еще нет!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+
+    <div id="comments_block">
+        <input id="composition_id" hidden name="composition_id" value="{{ book.pk }}">
+        <input id="user_id" hidden name="user_id" value="{{ request.user_id }}">
+        {% if user.is_authenticated %}
+            <b>
+                <p>Добавить комментарий:</p>
+            </b>
+            <textarea type="text" id="text" class="form-control mb-3" name="text"></textarea>
+            <button id="submit_comment" class="btn btn-outline-primary btn-sm" type="submit">Опубликовать</button>
+        {% endif %}
+
+        <div class="comments_list">
+            <b>
+                Комментарии:
+            </b>
+            <div class="comments_title">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal_order">
+        <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModal" tabindex="-1"
+             aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Заказ</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <p>Выберите тип операции:</p>
+                    <select class="form-select" name="operation_type" id="operation_type" onchange="toggleDateFields()">
+                        <!-- <option value="" disabled selected hidden>Цель</option> -->
+                        <!-- <option value="rent">Арендовать</option>
+                        <option value="buy">Купить</option> -->
+                    </select>
+                    </div>
+                    <div id="dateFields" class="modal-body" style="display: none;">
+                        <p>На какие даты вы хотите взять книгу в аренду?</p>
+                        <input type="date" name="date_plan_start" format="yyyy-mm-dd" id="date_plan_start">
+                        <input type="date" name="date_plan_end" format="yyyy-mm-dd" id="date_plan_end">
+                        <input type="text" name="usershelf_id" id="usershelf_id" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-warning create-order" id="create-order" style="display: none;">Создать заказ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="text" id="staff" name="is_staff" hidden value="{{ request.user.is_staff }}">
+    <script type="text/javascript">
+        ymaps.ready(init);
+
+        function init() {
+            var myMap = new ymaps.Map("map", {
+                center: [43.25, 76.93],
+                zoom: 14
+            }, {
+                searchControlProvider: 'yandex#search'
+            })
+            {% for ad in ads %}
+                var myCircle = new ymaps.Circle([
+                    // Координаты центра круга.
+                    {{ ad.coordinates }},
+                    // Радиус круга в метрах.
+                    100
+                ], {
+                    // Описываем свойства круга.
+                    // Содержимое балуна.
+                    balloonContent: `<h3 class="card-title">Объявление №{{ ad.user_shelf.id }}</h3>` +
+                        `<img src="data:image/;base64,{{ ad.coverphoto }}" width="150px" class="img-fluid rounded"
+                         alt="{{ ad.user_shelf }}">` +
+                        ` <ul class="list-group list-group-flush">` +
+                        ` <li class="list-group-item"><strong>Книга:</strong> "{{ ad.book.id_composition.name }}"</li>` +
+                        ` <li class="list-group-item"><strong>Издательство:</strong> "{{ ad.book.izdatelstvo }}"</li>` +
+                        `<li class="list-group-item"><strong>ISBN:</strong> {{ ad.book.isbn }}</li>` +
+                        `<li class="list-group-item"><strong>Состояние:</strong> {{ ad.user_shelf.book_state }}</li>` +
+                        `<li class="list-group-item"><strong>Статус:</strong> {{ ad.user_shelf.status }}</li>` +
+                        `<li class="list-group-item"><strong>Цель:</strong> {{ ad.user_shelf.purpose }}</li>` +
+                        `<li class="list-group-item"><strong>Количество:</strong> {{ ad.user_shelf.count }}</li>` +
+                        `{% if ad.user_shelf.price_for_week %}
+                            <li class="list-group-item"><strong>Цена за неделю:</strong>
+                            {{ ad.user_shelf.price_for_week }} руб.</li>{% endif %}` +
+                        `{% if ad.user_shelf.price_for_sale %}
+                            <li class="list-group-item"><strong>Цена продажи:</strong>
+                            {{ ad.user_shelf.price_for_sale }} руб.</li>{% endif %}` +
+                        `</ul>`,
+                    // Содержимое хинта.
+                    hintContent: "Местоположение книги"
+                }, {
+                    // Задаем опции круга.
+                    // Включаем возможность перетаскивания круга.
+                    draggable: false,
+                    // Цвет заливки.
+                    // Последний байт (77) определяет прозрачность.
+                    // Прозрачность заливки также можно задать используя опцию "fillOpacity".
+                    {% if ad.user_shelf.price_for_week  %}
+                        fillColor: "rgba(42,183,172,0.45)",
+                        // Цвет обводки.
+                        strokeColor: "#8eb2a4",
+                    {% endif %}
+                    {% if ad.user_shelf.price_for_sale  %}
+                        fillColor: "rgba(236,211,48,0.45)",
+                        // Цвет обводки.
+                        strokeColor: "rgba(241,98,9,0.45)",
+                    {% endif %}
+                    {% if ad.user_shelf.price_for_week and ad.user_shelf.price_for_sale  %}
+                        fillColor: "rgba(245,4,159,0.45)",
+                        // Цвет обводки.
+                        strokeColor: "rgba(112,7,10,0.45)",
+                    {% endif %}
+                    // Прозрачность обводки.
+                    strokeOpacity: 0.1,
+                    // Ширина обводки в пикселях.
+                    strokeWidth: 5
+                });
+                console.log('{{ ad.coordinates | safe }}');
+                // Добавляем круг на карту.
+                myMap.geoObjects.add(myCircle);
+            {% endfor %}
+        }
+    </script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const stars = document.querySelectorAll('.star-rating-input');
+            stars.forEach(function (star) {
+                star.addEventListener('change', function () {
+                    const rating = this.value;
+                    const composition_id = {{ book.id }};
+                    const user_id = {{ user.id }};
+
+                    let xhr = new XMLHttpRequest();
+                    xhr.onload = function () {
+                        if (this.status === 200) {
+                            let data = JSON.parse(this.response);
+                            averageRatingBlock = document.getElementById('average-rating');
+                            averageRatingBlock.innerHTML = `Рейтинг: ${data.avg_rating.average__rating}`;
+                        }
+                    }
+                    xhr.open('POST', `${baseUrl}/api/composition/${composition_id}/add_rating`);
+                    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                    xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+                    xhr.send(JSON.stringify({'rating': rating, 'user_id': user_id}));
+                })
+            })
+        })
+    </script>
+    <script defer src="{% static 'js/comments_detail_book.js' %}"></script>
+    <script defer src="{% static 'js/comments_book_crud.js' %}"></script>
+    <script defer src="{% static 'js/favorites.js' %}"></script>
+    <script defer src="{% static 'js/orders.js' %}"></script>
+{% endblock %}

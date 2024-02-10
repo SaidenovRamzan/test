@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+
+{% block title %} Обновление информации о книге {% endblock %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mt-4 mb-4">Обновление информации о книге</h3>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form square-inputs">
+            {% csrf_token %}
+            {% bootstrap_form form show_placeholder=False %}
+            
+        </div>
+        <div class="form_row">
+            {% bootstrap_button button_type="submit" content='Изменить книгу' button_class="btn btn-primary" %}
+            <a href="{% url 'home' %}">{% bootstrap_button button_type="submit" content='Отменить' button_class="btn btn-primary" %}</a>
+        </div>
+    </form>
+</br>
+</br>
+</br>
+</div>
+{% endblock %}
