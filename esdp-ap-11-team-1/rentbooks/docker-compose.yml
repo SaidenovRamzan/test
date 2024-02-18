@@ -4,6 +4,8 @@ services:
   postgres:
     image: postgres:14-alpine
     container_name: postgres
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: rentbooks
       POSTGRES_USER: postgres
@@ -21,6 +23,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
 
   mongo-express:
+    container_name: mongo-express
     image: mongo-express
     restart: always
     ports:
@@ -67,12 +70,10 @@ services:
       - "6378:6379"
 
   app:
+    container_name: app
     build: 
       context: .
       dockerfile: Dockerfile
-    environment:
-      - MONGO_HOST=${MONGO_HOST}
-      - POSTGRES_HOST=${POSTGRES_HOST}
     ports:
       - "8000:8000"
     depends_on:
@@ -84,13 +85,9 @@ services:
       - redis
     volumes:
       - .:/usr/src/app
-    command: >
-      /bin/bash -c ". venv/bin/activate && pip install -r rentbooks/reqs.txt &&
-      python rentbooks/manage.py makemigrations accounts &&
-      python rentbooks/manage.py migrate accounts &&
-      python rentbooks/manage.py makemigrations &&
-      python rentbooks/manage.py migrate &&
-      python rentbooks/manage.py runserver 0.0.0.0:8000"
+    command: /bin/bash -c "python manage.py makemigrations &&
+                          python manage.py migrate &&
+                          python manage.py runserver 0.0.0.0:8000"
     
 volumes:
   mongo_data:

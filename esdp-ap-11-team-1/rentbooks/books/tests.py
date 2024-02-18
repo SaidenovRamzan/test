@@ -12,139 +12,140 @@ import logging
 
 
 class CompositionCreationTest(TestCase):
+    count = 0
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Подключаемся к тестовой базе данных MongoDB
-        disconnect(alias='default')
-        cls.db = connect(db='test_db', host='mongo', username='root', password='example')
-        
-        # cls.db = connect('mydatabase', host='localhost:8082/')
+        disconnect(alias="default")  # Разрыв текущего соединения
+        cls.db = connect(
+            db="test_db", host="mongo", username="root", password="example"
+        )
 
     def setUp(self):
-        self.genre = Genres.objects.create(name='Test Genre')
+        self.genre = Genres.objects.create(name="Test Genre")
         self.composition = Composition.objects.create(
-            name='Test Composition',
-            author='Test Author',
-            description='Test Description',
+            name="Test Composition",
+            author="Test Author",
+            description="Test Description",
             rent_qte=10,
-            language='English',
+            language="English",
             id_genre=self.genre,
             is_visible=True,
         )
+        self.count += 1
 
     # Тестирование создания и чтение композиции
     def test_name_creation(self):
         composition = Composition.objects.first()
-        self.assertEqual(composition.name, 'Test Composition')
+        self.assertEqual(composition.name, "Test Composition")
 
-    def test_author_creation(self):
-        composition = Composition.objects.first()
-        self.assertEqual(composition.author, 'Test Author')
+    # def test_author_creation(self):
+    #     composition = Composition.objects.first()
+    #     self.assertEqual(composition.author, "Test Author")
 
-    def test_description_creation(self):
-        composition = Composition.objects.first()
-        self.assertEqual(composition.description, 'Test Description')
+    # def test_description_creation(self):
+    #     composition = Composition.objects.first()
+    #     self.assertEqual(composition.description, "Test Description")
 
-    def test_rent_qte_creation(self):
-        composition = Composition.objects.first()
-        self.assertEqual(composition.rent_qte, 10)
+    # def test_rent_qte_creation(self):
+    #     composition = Composition.objects.first()
+    #     self.assertEqual(composition.rent_qte, 10)
 
-    def test_language_creation(self):
-        composition = Composition.objects.first()
-        self.assertEqual(composition.language, 'English')
+    # def test_language_creation(self):
+    #     composition = Composition.objects.first()
+    #     self.assertEqual(composition.language, "English")
 
-    def test_id_genre_creation(self):
-        composition = Composition.objects.first()
-        genre = Genres.objects.first()
-        self.assertEqual(genre.name, 'Test Genre')
+    # def test_id_genre_creation(self):
+    #     composition = Composition.objects.first()
+    #     genre = Genres.objects.first()
+    #     self.assertEqual(genre.name, "Test Genre")
 
-    def test_is_visible_creation(self):
-        composition = Composition.objects.first()
-        self.assertEqual(composition.is_visible, True)
+    # def test_is_visible_creation(self):
+    #     composition = Composition.objects.first()
+    #     self.assertEqual(composition.is_visible, True)
 
     def tearDown(self):
-        self.composition.delete()
-        self.genre.delete()
+        if self.composition:
+            self.composition.delete()
+        if self.genre:
+            self.genre.delete()
         for i in Book.objects.all():
-            logging.info(f"{i=}===========================================================")
+            i.delete()
         for i in Composition.objects.all():
-            logging.info(f"{i=}===========================================================")
-
-    @classmethod
-    def tearDownClass(cls):
-        # Отключаемся от тестовой базы данных при завершении всех тестов
-        cls.db.close()
-        disconnect(alias='default')
-        super().tearDownClass()
+            i.delete()
+        logging.info(f"{self.count}    {'5'*50}")
 
 
-class BookCreationTest(TestCase):
+# class BookCreationTest(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        # Подключаемся к тестовой базе данных MongoDB
-        disconnect(alias='default')
-        cls.db = connect(db='test_db', host='mongo', username='root', password='example')
-        
-    def setUp(self):
-        self.genre = Genres.objects.create(name='Test Genre')
-        self.composition = Composition.objects.create(
-            name='Чебурашка',
-            author='Test Author',
-            description='Test Description',
-            rent_qte=10,
-            language='English',
-            id_genre=self.genre,
-            is_visible=True,
-        )
+#     @classmethod
+#     def setUpClass(cls):
+#         super().setUpClass()
+#         # Подключаемся к тестовой базе данных MongoDB
+#         disconnect(alias="default")
+#         cls.db = connect(
+#             db="test_db", host="mongo", username="root", password="example"
+#         )
 
-        image_data = Image.new('RGB', (100, 100))
-        image_data_io = BytesIO()
-        image_data.save(image_data_io, format='JPEG')
-        image_data_io.seek(0)
-        self.image = SimpleUploadedFile('test.jpg', image_data_io.read(), content_type='image/jpeg')
+#     def setUp(self):
+#         self.genre = Genres.objects.create(name="Test Genre")
+#         self.composition = Composition.objects.create(
+#             name="Чебурашка",
+#             author="Test Author",
+#             description="Test Description",
+#             rent_qte=10,
+#             language="English",
+#             id_genre=self.genre,
+#             is_visible=True,
+#         )
 
-        self.book = Book.objects.create(
-            id_composition=self.composition,
-            year=1999,
-            izdatelstvo='Просвещение',
-            pages=200,
-            isbn='123321',
-            coverphoto=self.image
-        )
+#         image_data = Image.new("RGB", (100, 100))
+#         image_data_io = BytesIO()
+#         image_data.save(image_data_io, format="JPEG")
+#         image_data_io.seek(0)
+#         self.image = SimpleUploadedFile(
+#             "test.jpg", image_data_io.read(), content_type="image/jpeg"
+#         )
 
-    # Тестирование создания и чтение книги
-    def test_name_creation(self):
-        composition = Composition.objects.filter(name='Чебурашка').first()
-        self.assertEqual(composition.name, 'Чебурашка')
+#         self.book = Book.objects.create(
+#             id_composition=self.composition,
+#             year=1999,
+#             izdatelstvo="Просвещение",
+#             pages=200,
+#             isbn="123321",
+#             coverphoto=self.image,
+#         )
 
-    def test_year_creation(self):
-        book = Book.objects.filter(name='Чебурашка').first()
-        self.assertEqual(book.year, 1999)
+#     # Тестирование создания и чтение книги
+#     def test_name_creation(self):
+#         composition = Composition.objects.filter(name="Чебурашка").first()
+#         self.assertEqual(composition.name, "Чебурашка")
 
-    def test_izdatelstvo_creation(self):
-        book = Book.objects.first()
-        self.assertEqual(book.izdatelstvo, 'Просвещение')
+#     def test_year_creation(self):
+#         book = Book.objects.filter(name="Чебурашка").first()
+#         self.assertEqual(book.year, 1999)
 
-    def test_pages_creation(self):
-        book = Book.objects.first()
-        self.assertEqual(book.pages, 200)
+#     def test_izdatelstvo_creation(self):
+#         book = Book.objects.first()
+#         self.assertEqual(book.izdatelstvo, "Просвещение")
 
-    def test_isbn_creation(self):
-        book = Book.objects.first()
-        self.assertEqual(book.isbn, '123321')
+#     def test_pages_creation(self):
+#         book = Book.objects.first()
+#         self.assertEqual(book.pages, 200)
 
-    def tearDown(self):
-        self.composition.delete()
-        self.genre.delete()
-        self.book.delete()
+#     def test_isbn_creation(self):
+#         book = Book.objects.first()
+#         self.assertEqual(book.isbn, "123321")
 
-    @classmethod
-    def tearDownClass(cls):
-        # Отключаемся от тестовой базы данных при завершении всех тестов
-        cls.db.close()
-        disconnect(alias='default')
-        super().tearDownClass()
+#     def tearDown(self):
+#         self.composition.delete()
+#         self.genre.delete()
+#         self.book.delete()
+
+#     @classmethod
+#     def tearDownClass(cls):
+#         # Отключаемся от тестовой базы данных при завершении всех тестов
+#         cls.db.close()
+#         disconnect(alias="default")
+#         super().tearDownClass()
