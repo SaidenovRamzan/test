@@ -49,4 +49,5 @@ urlpatterns += [
     path('create-chat/', views.ChatCreateAPIView.as_view(), name='chat_create'),
     path('composition/admin/all', views.CompositionAllVisible.as_view(), name='composition_all_visible'),
     path('composition/admin/selected', views.CompositionSelectedVisible.as_view(), name='composition_selected_visible'),
+    
 ]
