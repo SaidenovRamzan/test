@@ -7,13 +7,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-import logging
-
-# Create your tests here.
-
-
 from mongoengine import connect, disconnect
-
 from books.models import Genres, Composition, Book
 
 
@@ -84,7 +78,6 @@ class SearchCompositionApiTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_publish_houses_by_composition(self):
-        logging.info(f"{self.composition=} {'=='*1000}")
         url = reverse("api_get_book_publish_houses", kwargs={"pk": self.composition.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

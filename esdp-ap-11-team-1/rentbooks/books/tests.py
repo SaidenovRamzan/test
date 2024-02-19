@@ -3,12 +3,9 @@ from io import BytesIO
 from PIL import Image
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
-
-# Create your tests here.
 from mongoengine import connect, disconnect
 
 from books.models import Genres, Composition, Book
-import logging
 
 
 class CompositionCreationTest(TestCase):
@@ -56,7 +53,6 @@ class CompositionCreationTest(TestCase):
         self.assertEqual(composition.language, "English")
 
     def test_id_genre_creation(self):
-        composition = Composition.objects.first()
         genre = Genres.objects.first()
         self.assertEqual(genre.name, "Test Genre")
 
@@ -73,6 +69,13 @@ class CompositionCreationTest(TestCase):
             i.delete()
         for i in Composition.objects.all():
             i.delete()
+
+    @classmethod
+    def tearDownClass(cls):
+        # Отключаемся от тестовой базы данных при завершении всех тестов
+        cls.db.close()
+        disconnect(alias="default")
+        super().tearDownClass()
 
 
 class BookCreationTest(TestCase):
