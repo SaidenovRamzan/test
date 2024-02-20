@@ -9,7 +9,11 @@
     {% if account %}
         <h2 class="mb-5">Страница пользователя: {{ account.username }}</h2>
             <div class="col-md-4">
-                <img src="{{ account.avatar.url }}" width="300" height="400" class="avatar" alt="{{ account.username }}">
+                {% if account.avatar %}
+                    <img src="{{ account.avatar.url }}" width="300" height="400" class="avatar" alt="{{ account.username }}">
+                {% else %}
+                    <img src="/static/images/blank.jpg" width="300" height="400" class="avatar" alt="{{ account.username }}">
+                {% endif %}
                 </br>
                 <span>Общая оценка:</span>
                 {{ aver_ratio }}
