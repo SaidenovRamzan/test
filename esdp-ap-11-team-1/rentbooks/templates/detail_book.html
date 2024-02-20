@@ -246,7 +246,7 @@
                     // Координаты центра круга.
                     {{ ad.coordinates }},
                     // Радиус круга в метрах.
-                    200
+                    150
                 ], {
                     // Описываем свойства круга.
                     // Содержимое балуна.
@@ -283,7 +283,7 @@
                         strokeColor: "#8eb2a4",
                     {% endif %}
                     {% if ad.user_shelf.price_for_sale  %}
-                        fillColor: "rgba(236,211,48,0.45)",
+                        fillColor: "rgba(153, 134, 12, 0.7)",
                         // Цвет обводки.
                         strokeColor: "rgba(241,98,9,0.45)",
                     {% endif %}
@@ -298,6 +298,8 @@
                     strokeWidth: 5
                 });
                 console.log('{{ ad.coordinates | safe }}');
+                console.log('{{ ad.coordinates | safe }}');
+
                 // Добавляем круг на карту.
                 myMap.geoObjects.add(myCircle);
             {% endfor %}

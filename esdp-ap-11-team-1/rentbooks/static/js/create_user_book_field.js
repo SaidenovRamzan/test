@@ -69,7 +69,7 @@ function generateBookList(books) {
         card.setAttribute('data-book', `${books[i].id}`)
         card.classList.add('card');
         cardMarking.appendChild(card);
-
+        console.log(books[0].coverphoto)
         // Добавление обложки книги
         let coverphotoBase64 = books[i].coverphoto;
         let image = document.createElement('img');
@@ -421,6 +421,7 @@ function searchBookForShelf() {
                 let data = JSON.parse(this.response);
                 if (data) {
                     generateBookList(data.books);
+                    console.log(data.books) 
                 }
             }
         }

@@ -131,7 +131,9 @@ def search_book_api_view(request, *args, **kwargs):
                         "name": composition.name,
                         "author": composition.author,
                         "description": composition.description,
-                        # 'coverphoto': base64.b64encode(book.coverphoto.read()).decode('utf-8'),
+                        "coverphoto": base64.b64encode(book.coverphoto.read()).decode(
+                            "utf-8"
+                        ),
                     }
                 )
 

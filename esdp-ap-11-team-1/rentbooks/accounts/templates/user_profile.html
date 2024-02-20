@@ -15,6 +15,7 @@
                 {% if user.avatar %}
                     <img src="{{ user.avatar.url }}" class="img-fluid mb-3 user-avatar" alt="{{ user.username }}">
                 {% else %}
+
                     <img src="{% static 'images/not_avatar.png'%}" class="img-fluid mb-3 user-avatar"
                          alt="{{ user.username }}">
                 {% endif %}

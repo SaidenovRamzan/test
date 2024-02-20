@@ -334,7 +334,7 @@ class CompositionDetailView(View):
         )
 
         books = Book.objects.filter(id_composition=composition.id_Composition)
-
+        logging.info(f"{books[0]} {'='*29}")
         # Достаем картинку первой книги, которая привязана к композиции
         try:
             coverphoto_base64 = base64.b64encode(
@@ -342,13 +342,13 @@ class CompositionDetailView(View):
             ).decode("utf-8")
         except:
             coverphoto_base64 = None
+        logging.info(f"{coverphoto_base64} {'='*29}")
 
         # Достаем все объявления, привязанные к композиции
         user_shelfs = UserShelf.objects.all().filter(
             id_book__in=[id_book.id for id_book in books], is_active=True
         )
         user_shelf_objects = []
-        logging.info(request.user.is_authenticated, "=" * 100)
         for user_shelf in user_shelfs:
             # Достаем объявление, которое привязано к композиции
             if OrderOfRent.objects.filter(
@@ -386,7 +386,6 @@ class CompositionDetailView(View):
         avg_rating = Rating.objects.filter(
             composition_id=composition.id_Composition
         ).aggregate(average__rating=Avg("rating"))
-
         return render(
             request,
             self.template_name,
