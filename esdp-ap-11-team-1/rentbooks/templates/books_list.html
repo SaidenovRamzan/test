@@ -13,7 +13,8 @@
                 {% for book in books %}
                     <div class="col">
                         <div class="card">
-                            <img src="{{ book.coverphoto.url }}" class="card-img-top search-image"
+
+                            <img src="data:image/;base64,{{ coverphoto }}" class="card-img-top search-image"
                                  alt="{{ book.name }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ book.name|slice:"24"|linebreaksbr }}</h5>

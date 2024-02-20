@@ -124,6 +124,5 @@ class GetAllChats(APIView):
                 'user_name': User.objects.get(id=chat.user_1).username if chat.user_1 != user.id else User.objects.get(id=chat.user_2).username,
                 }
             for chat in chats]
-        logging.info(response)
         return JsonResponse({'orders': response})
         

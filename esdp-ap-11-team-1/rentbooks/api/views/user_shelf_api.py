@@ -33,7 +33,6 @@ class UserShelfApiView(APIView):
             return Response({'error': 'don\'t get user_id, book_id'})
         
     def post(self, request):
-        logging.info(f'{request.data=}')
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user_shelf = UserShelf.objects.filter(user__id=request.data.get('user'), id_book=request.data.get('book')).first()

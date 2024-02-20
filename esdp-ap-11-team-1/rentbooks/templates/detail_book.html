@@ -231,7 +231,7 @@
         </div>
     </div>
     <input type="text" id="staff" name="is_staff" hidden value="{{ request.user.is_staff }}">
-    <script type="text/javascript">
+    <script type="text/javascript" async>
         ymaps.ready(init);
 
         function init() {

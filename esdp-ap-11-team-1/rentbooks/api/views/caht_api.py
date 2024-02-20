@@ -3,7 +3,6 @@ from rest_framework.response import Response
 
 from chat.services import ChatServices, MessageServises
 from chat.models import Chat
-import logging
 
 
 class ChatAPIView(APIView):

@@ -47,6 +47,7 @@ document.getElementById('search-query').addEventListener('input', function (e) {
                 console.log(JSON.parse(this.response));
                 let books = JSON.parse(xhr.responseText).books;
                 displayResults(books);
+                console.log(this.response)
             }
         }
         xhr.open('POST', `http://localhost:8000/elastic_1`);

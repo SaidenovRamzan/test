@@ -20,9 +20,7 @@ from books.forms import CompositionForm
 from rents.models import UserShelf, OrderOfRent
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic import ListView
 from accounts.models import CompositionTest
-import logging
 
 
 class HomeView(View):
@@ -66,7 +64,17 @@ class SearchCompositionView(View):
                 | Q(author__icontains=search_value)
                 | Q(description__icontains=search_value)
             )
-        return render(request, self.template_name, context={"books": result})
+        coverphoto = base64.b64encode(
+            Book.objects.all()
+            .filter(id_composition=result.first().id)
+            .first()
+            .coverphoto.read()
+        ).decode("utf-8")
+        return render(
+            request,
+            self.template_name,
+            context={"books": result, "coverphoto": coverphoto},
+        )
 
 
 class ListOfCompositionsView(View):
@@ -334,7 +342,6 @@ class CompositionDetailView(View):
         )
 
         books = Book.objects.filter(id_composition=composition.id_Composition)
-        logging.info(f"{books[0]} {'='*29}")
         # Достаем картинку первой книги, которая привязана к композиции
         try:
             coverphoto_base64 = base64.b64encode(
@@ -342,7 +349,6 @@ class CompositionDetailView(View):
             ).decode("utf-8")
         except:
             coverphoto_base64 = None
-        logging.info(f"{coverphoto_base64} {'='*29}")
 
         # Достаем все объявления, привязанные к композиции
         user_shelfs = UserShelf.objects.all().filter(
