@@ -57,6 +57,8 @@ class SearchCompositionView(View):
     template_name = "books_list.html"
 
     def get(self, request):
+        coverphoto = None
+        result = None
         search_value = self.request.GET.get("query")
         if search_value:
             result = self.model.objects.filter(
@@ -64,12 +66,14 @@ class SearchCompositionView(View):
                 | Q(author__icontains=search_value)
                 | Q(description__icontains=search_value)
             )
-        coverphoto = base64.b64encode(
-            Book.objects.all()
-            .filter(id_composition=result.first().id)
-            .first()
-            .coverphoto.read()
-        ).decode("utf-8")
+        coverphoto = None
+        if result:
+            coverphoto = base64.b64encode(
+                Book.objects.all()
+                .filter(id_composition=result.first().id)
+                .first()
+                .coverphoto.read()
+            ).decode("utf-8")
         return render(
             request,
             self.template_name,
